@@ -1,1 +1,78 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global tokens & theme */
+:root {
+  --bg: #ECEBFF;
+  --ink: #1B22C9;
+  --mut: #4A4F9E;
+  --acc: #FFC933;
+  --on: #0A0C2B;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --px: clamp(16px, 3.2vw, 48px);
+  --sh: 4rem;
+  --ph: calc(100svh - var(--sh) - 2.5rem);
+  --pw: calc(var(--ph) * .547);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --sh: 3.4rem;
+    --ph: clamp(340px, 60svh, 500px);
+    --pw: calc(var(--ph) * .547);
+    --px: clamp(14px, 4vw, 24px);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A0C2B;
+    --ink: #E9EBFF;
+    --mut: #A5AAF0;
+    --acc: #FFD23F;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0A0C2B;
+  --ink: #E9EBFF;
+  --mut: #A5AAF0;
+  --acc: #FFD23F;
+  color-scheme: dark;
+}
+
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+  scroll-behavior: smooth;
+}
+
+html, body {
+  min-height: 100%;
+  margin: 0;
+}
+
+app-root {
+  display: block;
+  min-height: 100%;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 1rem/1.5 'Bricolage Grotesque', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+}
+
+@media (pointer: fine) {
+  body, a, button { cursor: none; }
+}
+
+a:focus-visible, button:focus-visible {
+  outline: 3px solid var(--acc);
+  outline-offset: 4px;
+}

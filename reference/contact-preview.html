@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact — Ali Abueldahab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root {
+  --bg: #ECEBFF;
+  --ink: #1B22C9;
+  --mut: #4A4F9E;
+  --acc: #FFC933;
+  --on: #0A0C2B;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --px: clamp(16px, 3.2vw, 48px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A0C2B;
+    --ink: #E9EBFF;
+    --mut: #A5AAF0;
+    --acc: #FFD23F;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A0C2B;
+  --ink: #E9EBFF;
+  --mut: #A5AAF0;
+  --acc: #FFD23F;
+  color-scheme: dark;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, system-ui, sans-serif;
+  overflow-x: hidden;
+}
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Stub hero to preview scroll */
+.hero-stub {
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  background: var(--bg);
+  text-align: center;
+  padding: var(--px);
+}
+.hero-stub h1 { font-size: clamp(2.5rem, 6vw, 5rem); margin: 0; font-weight: 800; }
+.hero-stub p { font-family: 'JetBrains Mono', monospace; color: var(--mut); margin: 0; }
+.hero-stub button {
+  padding: .6em 1.4em;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--acc);
+  color: var(--on);
+  font: 600 .9rem 'JetBrains Mono', monospace;
+  cursor: pointer;
+}
+
+/* Contact section styles */
+.cthost { position: relative; z-index: 8; }
+
+.ct {
+  --r: clamp(32px, 6vw, 72px);
+  --cb: var(--ink);
+  --cf: var(--bg);
+  --cm: color-mix(in srgb, var(--cf) 58%, transparent);
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  position: relative;
+  overflow: clip;
+  background: var(--cb);
+  color: var(--cf);
+  font-family: Inter, system-ui, sans-serif;
+  border-radius: var(--r) var(--r) 0 0;
+  box-shadow: 0 -10px 0 var(--acc);
+  padding: clamp(72px, 12vw, 160px) 0 24px;
+}
+
+.ct-tag {
+  position: absolute; z-index: 9; top: 0; left: 50%;
+  transform: translate(-50%, -50%);
+  padding: .45em 1.1em;
+  border: 2px solid var(--ink); border-radius: 999px;
+  background: var(--acc); color: var(--on);
+  font: 500 .85rem var(--mono); white-space: nowrap;
+}
+
+.ct-top {
+  display: flex; justify-content: space-between; gap: 1rem;
+  margin: 0 var(--px, 24px) clamp(24px, 5vw, 64px);
+  font: 500 .85rem var(--mono); color: var(--cm);
+}
+
+.ct-pin { display: grid; justify-items: center; gap: clamp(40px, 8vw, 90px); }
+
+.ct-big {
+  display: none; position: absolute; left: 0; top: 50%; margin-top: -.4em;
+  white-space: nowrap; font-size: clamp(10rem, 34vw, 30rem);
+  font-weight: 800; line-height: .8; letter-spacing: -.06em;
+  color: transparent; -webkit-text-stroke: 2px var(--cf);
+  opacity: .1; pointer-events: none; user-select: none;
+}
+
+.ct-term {
+  position: relative; z-index: 1;
+  width: min(92vw, 640px);
+  border: 2px solid var(--cf); border-radius: 20px;
+  background: var(--cb); box-shadow: 10px 10px 0 var(--acc);
+  font-family: var(--mono); overflow: hidden;
+}
+.ct-bar {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .7rem 1rem; border-bottom: 2px solid var(--cf);
+  font-size: .75rem; color: var(--cm);
+}
+.ct-bar i { width: 11px; height: 11px; border: 2px solid var(--cf); border-radius: 50%; }
+.ct-bar i:first-child { background: var(--acc); }
+.ct-bar span { margin-left: auto; }
+.ct-body { padding: 1.2rem 1.2rem 1.4rem; font-size: clamp(.78rem, 2.6vw, 1rem); line-height: 1.9; }
+.ct-ln, .ct-ok { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.ct-p, .ct-ok { color: var(--acc); }
+.ct-ok { margin-top: .4rem; }
+.ct-cur {
+  display: inline-block; width: .6em; height: 1.1em; vertical-align: -.2em;
+  background: var(--acc); animation: ct-blink 1s steps(1) infinite;
+}
+@keyframes ct-blink { 50% { opacity: 0; } }
+
+.ct-out {
+  position: relative; z-index: 2;
+  display: grid; justify-items: center; gap: clamp(18px, 3vh, 32px);
+  padding: 0 var(--px, 24px); text-align: center;
+}
+.ct-head {
+  margin: 0; max-width: 12em;
+  font-size: clamp(2.4rem, 8vw, 7.5rem);
+  font-weight: 800; line-height: 1; letter-spacing: -.045em;
+}
+.ct-head em { font-style: normal; }
+.ctm { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+.ctmi { display: inline-block; }
+.ct-head em .ctmi { color: var(--acc); }
+
+.ct-mail {
+  display: inline-flex; align-items: center; gap: .4em;
+  padding: .35em .8em; border: 2px solid var(--cf); border-radius: 999px;
+  font: 700 clamp(1.1rem, 3.6vw, 2.4rem)/1.1 var(--mono);
+  color: var(--cf); text-decoration: none;
+  background: linear-gradient(var(--acc), var(--acc)) 0 100% / 0 100% no-repeat;
+  transition: background-size .45s cubic-bezier(.2, 0, 0, 1), color .3s;
+}
+.ct-mail:hover { background-size: 100% 100%; color: var(--on); }
+.ct-soc { display: flex; flex-wrap: wrap; justify-content: center; gap: .7rem; }
+.ct-soc a {
+  padding: .4em 1em; border: 2px solid var(--cf); border-radius: 999px;
+  color: var(--cf); text-decoration: none; font: 500 .85rem var(--mono);
+  transition: background .3s, color .3s;
+}
+.ct-soc a:hover { background: var(--acc); color: var(--on); }
+.ct-note { margin: 0; font: 500 .8rem var(--mono); color: var(--cm); }
+
+.ct-mq { margin-top: clamp(48px, 8vw, 100px); border-block: 2px solid var(--cf); overflow: hidden; padding: .3em 0; }
+.ct-mq-in {
+  display: flex; width: max-content;
+  font-size: clamp(2.5rem, 8vw, 7rem); font-weight: 800;
+  letter-spacing: -.04em; text-transform: uppercase; line-height: 1.1;
+}
+.ct-mq-in span { white-space: pre; }
+.ct-foot { margin: 1.6rem var(--px, 24px) 0; text-align: center; font: 500 .8rem var(--mono); color: var(--cm); }
+
+.ct--pin .ct-pin { position: relative; place-items: center; height: 100svh; overflow: hidden; gap: 0; }
+.ct--pin .ct-term, .ct--pin .ct-out { grid-area: 1 / 1; }
+.ct--pin .ct-big { display: block; }
+.ct--pin .ct-out { pointer-events: none; }
+.ct--pin .ct-out a { pointer-events: auto; }
+</style>
+</head>
+<body>
+
+<div class="hero-stub">
+  <p>// Scroll down to see Section 05: Contact</p>
+  <h1>Ali Abueldahab</h1>
+  <button type="button" onclick="const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark'">Switch Theme</button>
+  <p>↓ scroll to dock contact ↓</p>
+</div>
+
+<div class="cthost" id="ctHost">
+  <span class="ct-tag">git push origin main</span>
+  <section class="ct">
+    <div class="ct-top">
+      <span>// 05 — contact</span>
+      <span>$ git remote -v</span>
+    </div>
+
+    <div class="ct-pin" id="ct-pin">
+      <b class="ct-big" aria-hidden="true">hello()</b>
+
+      <div class="ct-term" aria-hidden="true">
+        <div class="ct-bar"><i></i><i></i><i></i><span>contact — zsh</span></div>
+        <div class="ct-body">
+          <p class="ct-ln"><span class="ct-p">$</span> <span class="ct-t">git checkout -b new-project</span></p>
+          <p class="ct-ln"><span class="ct-p">$</span> <span class="ct-t">git add idea.md</span></p>
+          <p class="ct-ln"><span class="ct-p">$</span> <span class="ct-t">git commit -m "let's build it"</span></p>
+          <p class="ct-ln"><span class="ct-p">$</span> <span class="ct-t">git push origin hire-me</span></p>
+          <p class="ct-ok">✓ pushed to origin/hire-me</p>
+          <span class="ct-cur"></span>
+        </div>
+      </div>
+
+      <div class="ct-out">
+        <h2 class="ct-head">Got an idea? <em>Let’s ship it.</em></h2>
+        <a class="ct-mail" href="mailto:aliabueldahab2005@gmail.com">aliabueldahab2005@gmail.com <span>↗</span></a>
+        <div class="ct-soc">
+          <a href="https://github.com/aliabueldahab" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://linkedin.com/in/aliabueldahab" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://wa.me/201025546416" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+        <p class="ct-note">// open for freelance &amp; full-time roles</p>
+      </div>
+    </div>
+
+    <div class="ct-mq" aria-hidden="true">
+      <div class="ct-mq-in">
+        <span>available for work ✦ full stack ✦ angular ✦ node.js ✦ </span>
+        <span>available for work ✦ full stack ✦ angular ✦ node.js ✦ </span>
+      </div>
+    </div>
+    <p class="ct-foot">© 2026 · built with Angular + GSAP</p>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+function initContact(host, gsap, ScrollTrigger) {
+  const q = (s, r = host) => r.querySelector(s);
+  const qa = (s, r = host) => Array.from(r.querySelectorAll(s));
+
+  const split = el => {
+    const out = [];
+    const walk = n => Array.from(n.childNodes).forEach(c => {
+      if (c.nodeType !== 3) return walk(c);
+      const f = document.createDocumentFragment();
+      (c.textContent || '').split(/(\s+)/).forEach(t => {
+        if (!t.trim()) return void f.append(t);
+        const s = document.createElement('span'), i = document.createElement('span');
+        s.className = 'ctm'; i.className = 'ctmi'; i.textContent = t;
+        s.append(i); out.push(i); f.append(s);
+      });
+      c.replaceWith(f);
+    });
+    walk(el);
+    return out;
+  };
+
+  const section = q('.ct'), pin = q('#ct-pin'), term = q('.ct-term');
+  const cur = q('.ct-cur'), ok = q('.ct-ok'), big = q('.ct-big');
+  const lines = qa('.ct-ln'), ts = lines.map(l => q('.ct-t', l));
+  const full = ts.map(t => t.textContent);
+  const words = split(q('.ct-head'));
+  const outs = [q('.ct-mail'), ...qa('.ct-soc a'), q('.ct-note')];
+  const mm = gsap.matchMedia();
+
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const off = [];
+    section.classList.add('ct--pin');
+
+    ts.forEach(t => (t.textContent = ''));
+    gsap.set(lines, { autoAlpha: 0 });
+    gsap.set(ok, { autoAlpha: 0, y: 10 });
+    gsap.set(term, { autoAlpha: 0, y: 80, rotation: 4 });
+    gsap.set(words, { yPercent: 110, rotation: 6 });
+    gsap.set(outs, { autoAlpha: 0, yPercent: 60 });
+
+    gsap.fromTo(section, { '--r': '64px' }, {
+      '--r': '0px', ease: 'none',
+      scrollTrigger: { trigger: host, start: 'top bottom', end: 'top top', scrub: true },
+    });
+    gsap.fromTo(big, { xPercent: 25 }, {
+      xPercent: -35, ease: 'none',
+      scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom bottom', scrub: true },
+    });
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: { trigger: pin, start: 'top top', end: '+=260%', pin: true, scrub: 0.6, anticipatePin: 1, invalidateOnRefresh: true },
+    });
+    tl.to(term, { autoAlpha: 1, y: 0, rotation: 0, duration: 0.5, ease: 'power3.out' });
+    lines.forEach((l, i) => {
+      const o = { n: 0 };
+      tl.to(l, { autoAlpha: 1, duration: 0.05 }).to(o, {
+        n: full[i].length,
+        duration: full[i].length * 0.03,
+        onUpdate: () => {
+          ts[i].textContent = full[i].slice(0, Math.round(o.n));
+          ts[i].after(cur);
+        },
+      });
+    });
+    tl.to(ok, { autoAlpha: 1, y: 0, duration: 0.3 })
+      .to(term, { yPercent: -130, rotation: -5, scale: 0.85, autoAlpha: 0, duration: 0.8, ease: 'power3.in' }, '+=0.4')
+      .to(words, { yPercent: 0, rotation: 0, duration: 0.9, stagger: 0.08, ease: 'expo.out' }, '<0.35')
+      .to(outs, { autoAlpha: 1, yPercent: 0, duration: 0.6, stagger: 0.15, ease: 'power3.out' }, '>-0.2');
+
+    const mq = gsap.to(q('.ct-mq-in'), { xPercent: -50, ease: 'none', duration: 22, repeat: -1 });
+    ScrollTrigger.create({
+      trigger: section, start: 'top bottom', end: 'bottom top',
+      onUpdate: s => gsap.to(mq, {
+        timeScale: 1 + Math.abs(s.getVelocity()) / 250, duration: 0.2, overwrite: true,
+        onComplete: () => gsap.to(mq, { timeScale: 1, duration: 1 }),
+      }),
+    });
+
+    if (matchMedia('(hover: hover)').matches) {
+      outs.slice(0, -1).forEach((el, i) => {
+        const k = i ? 0.3 : 0.12;
+        const x = gsap.quickTo(el, 'x', { duration: 0.5, ease: 'power3' });
+        const y = gsap.quickTo(el, 'y', { duration: 0.5, ease: 'power3' });
+        const mv = e => {
+          const r = el.getBoundingClientRect();
+          x((e.clientX - r.left - r.width / 2) * k);
+          y((e.clientY - r.top - r.height / 2) * k);
+        };
+        const lv = () => { x(0); y(0); };
+        el.addEventListener('mousemove', mv);
+        el.addEventListener('mouseleave', lv);
+        off.push(() => { el.removeEventListener('mousemove', mv); el.removeEventListener('mouseleave', lv); });
+      });
+    }
+
+    return () => {
+      off.forEach(f => f());
+      section.classList.remove('ct--pin');
+      ts.forEach((t, i) => (t.textContent = full[i]));
+      q('.ct-body').append(cur);
+    };
+  });
+
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+  return () => mm.revert();
+}
+
+initContact(document.getElementById('ctHost'), gsap, ScrollTrigger);
+</script>
+</body>
+</html>

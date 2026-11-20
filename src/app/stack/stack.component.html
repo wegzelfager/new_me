@@ -1,0 +1,56 @@
+<div class="stackhost" #stackHost>
+  <span class="tag stack-tag">git merge stack → main</span>
+  <section class="stack">
+    <div class="sk-top">
+      <span>// 03 — stack</span>
+      <span>$ git grep --count</span>
+    </div>
+
+    <p class="sk-statement" id="sk-statement">Eight tools. Three shipped commits. Pick one and see where it ran.</p>
+
+    <div class="sk-grid">
+      <!-- Tool list -->
+      <div class="sk-list" role="tablist" aria-label="Tech stack">
+        <button
+          *ngFor="let tool of tools"
+          type="button"
+          class="sk-row"
+          role="tab"
+          [attr.data-tool]="tool.name"
+          [attr.data-commits]="tool.commits.join(',')"
+        >
+          <span class="sk-name"><span class="sk-name-text">{{ tool.name }}</span></span>
+          <span class="sk-meta">
+            <span class="sk-dots" aria-hidden="true">
+              <i class="sk-dot" [class.on]="tool.commits.includes(1)"></i>
+              <i class="sk-dot" [class.on]="tool.commits.includes(2)"></i>
+              <i class="sk-dot" [class.on]="tool.commits.includes(3)"></i>
+            </span>
+            <span class="sk-count">×{{ tool.commits.length }}</span>
+          </span>
+        </button>
+      </div>
+
+      <!-- Sticky Terminal -->
+      <div class="sk-terminal-wrap">
+        <div class="sk-terminal" aria-live="polite">
+          <div class="sk-term-header">
+            <span class="sk-term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="sk-term-title">git log</span>
+          </div>
+          <div class="sk-term-body">
+            <div class="sk-term-prompt">
+              <span class="sk-term-ps1">$</span>
+              <span class="sk-term-cmd" id="sk-cmd"></span>
+              <span class="sk-term-cursor" aria-hidden="true"></span>
+            </div>
+            <ul class="sk-term-results" id="sk-results"></ul>
+          </div>
+          <div class="sk-term-footer">
+            <button type="button" class="sk-term-btn" id="sk-scroll-btn">See it in my work →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

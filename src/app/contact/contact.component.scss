@@ -1,0 +1,118 @@
+:host { display: block; }
+.cthost { position: relative; z-index: 8; }
+
+.ct {
+  --r: clamp(32px, 6vw, 72px);
+  --cb: var(--ink);
+  --cf: var(--bg);
+  --cm: color-mix(in srgb, var(--cf) 58%, transparent);
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  position: relative;
+  overflow: clip;
+  background: var(--cb);
+  color: var(--cf);
+  font-family: Inter, system-ui, sans-serif;
+  border-radius: var(--r) var(--r) 0 0;
+  box-shadow: 0 -10px 0 var(--acc);
+  padding: clamp(72px, 12vw, 160px) 0 24px;
+}
+
+.ct-tag {
+  position: absolute; z-index: 9; top: 0; left: 50%;
+  transform: translate(-50%, -50%);
+  padding: .45em 1.1em;
+  border: 2px solid var(--ink); border-radius: 999px;
+  background: var(--acc); color: var(--on);
+  font: 500 .85rem var(--mono); white-space: nowrap;
+}
+
+.ct-top {
+  display: flex; justify-content: space-between; gap: 1rem;
+  margin: 0 var(--px, 24px) clamp(24px, 5vw, 64px);
+  font: 500 .85rem var(--mono); color: var(--cm);
+}
+
+/* default (reduced motion): stacked and fully visible */
+.ct-pin { display: grid; justify-items: center; gap: clamp(40px, 8vw, 90px); }
+
+.ct-big {
+  display: none; position: absolute; left: 0; top: 50%; margin-top: -.4em;
+  white-space: nowrap; font-size: clamp(10rem, 34vw, 30rem);
+  font-weight: 800; line-height: .8; letter-spacing: -.06em;
+  color: transparent; -webkit-text-stroke: 2px var(--cf);
+  opacity: .1; pointer-events: none; user-select: none;
+}
+
+.ct-term {
+  position: relative; z-index: 1;
+  width: min(92vw, 640px);
+  border: 2px solid var(--cf); border-radius: 20px;
+  background: var(--cb); box-shadow: 10px 10px 0 var(--acc);
+  font-family: var(--mono); overflow: hidden;
+}
+.ct-bar {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .7rem 1rem; border-bottom: 2px solid var(--cf);
+  font-size: .75rem; color: var(--cm);
+}
+.ct-bar i { width: 11px; height: 11px; border: 2px solid var(--cf); border-radius: 50%; }
+.ct-bar i:first-child { background: var(--acc); }
+.ct-bar span { margin-left: auto; }
+.ct-body { padding: 1.2rem 1.2rem 1.4rem; font-size: clamp(.78rem, 2.6vw, 1rem); line-height: 1.9; }
+.ct-ln, .ct-ok { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.ct-p, .ct-ok { color: var(--acc); }
+.ct-ok { margin-top: .4rem; }
+.ct-cur {
+  display: inline-block; width: .6em; height: 1.1em; vertical-align: -.2em;
+  background: var(--acc); animation: ct-blink 1s steps(1) infinite;
+}
+@keyframes ct-blink { 50% { opacity: 0; } }
+
+.ct-out {
+  position: relative; z-index: 2;
+  display: grid; justify-items: center; gap: clamp(18px, 3vh, 32px);
+  padding: 0 var(--px, 24px); text-align: center;
+}
+.ct-head {
+  margin: 0; max-width: 12em;
+  font-size: clamp(2.4rem, 8vw, 7.5rem);
+  font-weight: 800; line-height: 1; letter-spacing: -.045em;
+}
+.ct-head em { font-style: normal; }
+:host ::ng-deep .ctm { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+:host ::ng-deep .ctmi { display: inline-block; }
+:host ::ng-deep .ct-head em .ctmi { color: var(--acc); }
+
+.ct-mail {
+  display: inline-flex; align-items: center; gap: .4em;
+  padding: .35em .8em; border: 2px solid var(--cf); border-radius: 999px;
+  font: 700 clamp(1.1rem, 3.6vw, 2.4rem)/1.1 var(--mono);
+  color: var(--cf); text-decoration: none;
+  background: linear-gradient(var(--acc), var(--acc)) 0 100% / 0 100% no-repeat;
+  transition: background-size .45s cubic-bezier(.2, 0, 0, 1), color .3s;
+}
+.ct-mail:hover { background-size: 100% 100%; color: var(--on); }
+.ct-soc { display: flex; flex-wrap: wrap; justify-content: center; gap: .7rem; }
+.ct-soc a {
+  padding: .4em 1em; border: 2px solid var(--cf); border-radius: 999px;
+  color: var(--cf); text-decoration: none; font: 500 .85rem var(--mono);
+  transition: background .3s, color .3s;
+}
+.ct-soc a:hover { background: var(--acc); color: var(--on); }
+.ct-note { margin: 0; font: 500 .8rem var(--mono); color: var(--cm); }
+
+.ct-mq { margin-top: clamp(48px, 8vw, 100px); border-block: 2px solid var(--cf); overflow: hidden; padding: .3em 0; }
+.ct-mq-in {
+  display: flex; width: max-content;
+  font-size: clamp(2.5rem, 8vw, 7rem); font-weight: 800;
+  letter-spacing: -.04em; text-transform: uppercase; line-height: 1.1;
+}
+.ct-mq-in span { white-space: pre; }
+.ct-foot { margin: 1.6rem var(--px, 24px) 0; text-align: center; font: 500 .8rem var(--mono); color: var(--cm); }
+
+/* pinned stage (class added by the component when motion is allowed) */
+.ct--pin .ct-pin { position: relative; place-items: center; height: 100svh; overflow: hidden; gap: 0; }
+.ct--pin .ct-term, .ct--pin .ct-out { grid-area: 1 / 1; }
+.ct--pin .ct-big { display: block; }
+.ct--pin .ct-out { pointer-events: none; }
+.ct--pin .ct-out a { pointer-events: auto; }

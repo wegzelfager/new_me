@@ -1,0 +1,97 @@
+<div class="xphost" #xpHost>
+  <span class="xp-tag">git merge experience → main</span>
+  <section class="xp">
+    <div class="xp-top">
+      <span>// 04 — experience</span>
+      <span>$ git tag --list</span>
+    </div>
+
+    <p class="xp-statement" id="xp-statement">Two years, <em>four releases</em>. Scroll to ship them one by one.</p>
+
+    <div class="xp-pin" id="xp-pin">
+      <div class="xp-rail-wrap" aria-hidden="true">
+        <div class="xp-meta">
+          <span>$ git checkout <b id="xp-ver">{{ releases[0].ver }}</b></span>
+          <span id="xp-cnt">1 / {{ releases.length }}</span>
+        </div>
+        <div class="xp-rail">
+          <i class="xp-rail-fill"></i>
+          <span
+            class="xp-stop"
+            *ngFor="let r of releases; let i = index; let l = last"
+            [class.live]="l"
+            [style.left.%]="(i * 100) / (releases.length - 1)"
+          >
+            <i class="xp-dot"></i>
+            <span class="xp-lbl">{{ r.ver }}</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Mobile interactive release switcher -->
+      <div class="xp-mob-nav" aria-label="Releases">
+        <div class="xp-mob-prompt">
+          <span>$ git checkout</span>
+          <span class="xp-mob-counter" id="xp-mob-cnt">1 / {{ releases.length }}</span>
+        </div>
+        <div class="xp-mob-tags" role="tablist">
+          <button
+            *ngFor="let r of releases; let i = index; let l = last"
+            type="button"
+            class="xp-mob-tab"
+            [class.active]="i === 0"
+            [class.live]="l"
+            role="tab"
+          >
+            <span class="xp-mob-dot"></span>
+            {{ r.ver }}
+          </button>
+        </div>
+      </div>
+
+      <div class="xp-track" id="xp-track">
+        <article class="xp-panel" *ngFor="let r of releases; let i = index" [attr.data-ver]="r.ver">
+          <b class="xp-big" aria-hidden="true">0{{ i + 1 }}</b>
+
+          <div class="xp-txt">
+            <span class="xp-hash">{{ r.hash }}</span>
+            <h3 class="xp-ttl">{{ r.role }}</h3>
+            <p class="xp-org">{{ r.org }} · {{ r.when }}</p>
+            <p class="xp-desc">{{ r.desc }}</p>
+            <div class="xp-tags"><span *ngFor="let t of r.tags">{{ t }}</span></div>
+          </div>
+
+          <div class="xp-card">
+            <div class="xp-row"><span>{{ r.ver }}</span><span>{{ r.kind }}</span></div>
+            <div>
+              <div class="xp-stat">
+                <b
+                  [attr.data-to]="r.stat.to"
+                  [attr.data-dec]="r.stat.dec"
+                  [attr.data-pre]="r.stat.pre"
+                  [attr.data-suf]="r.stat.suf"
+                  >{{ r.stat.text }}</b
+                >
+              </div>
+              <p class="xp-cap">{{ r.stat.label }}</p>
+            </div>
+            <ul class="xp-diff">
+              <li *ngFor="let d of r.diff">
+                <span class="xp-sg" [class.add]="d.sign === '+'">{{ d.sign }}</span>
+                <span>{{ d.text }}</span>
+              </li>
+            </ul>
+          </div>
+        </article>
+      </div>
+
+      <!-- Mobile dots and swipe hint -->
+      <div class="xp-mob-footer" aria-hidden="true">
+        <div class="xp-mob-dots" id="xp-mob-dots">
+          <span *ngFor="let r of releases; let i = index" [class.on]="i === 0"></span>
+        </div>
+        <span class="xp-mob-hint">← swipe to inspect →</span>
+      </div>
+    </div>
+  </section>
+</div>

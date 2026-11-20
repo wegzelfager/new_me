@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ali A. — Work section</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* tokens & themes */
+:root {
+  --bg: #f6f5ff;
+  --ink: #0a0c2b;
+  --acc: #ffd43b;
+  --on: #0a0c2b;
+  --mut: #55589b;
+  --px: clamp(20px, 4vw, 56px);
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0a0c2b; --ink: #e9eaff; --mut: #9a9de6; }
+}
+:root[data-theme="dark"] { --bg: #0a0c2b; --ink: #e9eaff; --mut: #9a9de6; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; }
+
+/* hero stub */
+.stub { height: 100svh; display: grid; place-content: center; gap: 1.2rem; text-align: center; border-bottom: 2px solid var(--ink); font-family: 'JetBrains Mono', ui-monospace, monospace; }
+.stub button { justify-self: center; border: 2px solid var(--ink); background: none; color: var(--ink); border-radius: 999px; padding: .4em 1em; font: inherit; cursor: pointer; }
+
+/* layout */
+.workhost { display: block; position: relative; z-index: 5; }
+.work { position: relative; overflow: clip; background: var(--bg); color: var(--ink); padding: clamp(72px, 12vw, 180px) var(--px, 24px) clamp(80px, 12vw, 160px); }
+.wk-top, .hash, .mono, .row, .tags span { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; }
+.wk-top { display: flex; justify-content: space-between; gap: 1rem; font-size: .85rem; font-weight: 500; color: var(--mut); }
+
+/* statement */
+.statement { margin: clamp(32px, 6vw, 80px) 0 0; max-width: 20em; font-size: clamp(2rem, 5.6vw, 5.6rem); font-weight: 800; line-height: 1.04; letter-spacing: -.04em; }
+.statement em { font-style: normal; }
+.workhost .w { display: inline-block; }
+.workhost .statement em .w { background: linear-gradient(var(--acc), var(--acc)) 0 92% / 100% .14em no-repeat; }
+.workhost .m { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+.workhost .mi { display: inline-block; }
+
+/* git chain & rail */
+.chain { position: relative; display: grid; gap: clamp(90px, 14vw, 220px); margin-top: clamp(80px, 12vw, 200px); }
+.rail { position: absolute; left: 11px; top: 0; bottom: 0; width: 2px; }
+.rail::before { content: ""; position: absolute; inset: 0; background: var(--ink); opacity: .18; }
+.rail-fill { position: absolute; inset: 0; background: var(--acc); transform-origin: top; transform: scaleY(0); }
+
+/* chapters */
+.chap { position: relative; display: grid; grid-template-columns: 56px minmax(0, 1fr) minmax(0, 1.1fr); column-gap: clamp(16px, 3vw, 48px); align-items: center; }
+.node { grid-column: 1; align-self: start; justify-self: start; position: relative; z-index: 2; width: 24px; height: 24px; margin-top: .6rem; border: 2px solid var(--ink); border-radius: 50%; background: var(--bg); transition: background .3s; }
+.node.on { background: var(--acc); }
+.node.live { animation: pulse 1.8s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 var(--acc); } 100% { box-shadow: 0 0 0 16px transparent; } }
+
+.big { position: absolute; left: 72px; top: -.35em; z-index: 0; font-size: clamp(8rem, 22vw, 20rem); font-weight: 800; line-height: .8; letter-spacing: -.06em; color: transparent; -webkit-text-stroke: 2px var(--ink); opacity: .16; pointer-events: none; user-select: none; }
+.txt, .vis { position: relative; z-index: 1; }
+.txt { grid-column: 2; }
+.vis { grid-column: 3; perspective: 1000px; }
+
+.hash { display: block; margin-bottom: 1.2rem; font-size: .85rem; font-weight: 500; color: var(--mut); }
+.ttl { margin: 0; font-size: clamp(2.2rem, 5vw, 4.6rem); font-weight: 800; line-height: 1; letter-spacing: -.04em; }
+.desc { max-width: 46ch; margin: 1.4rem 0 0; font-size: 1.1rem; line-height: 1.55; color: var(--mut); }
+.tags { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.6rem; }
+.tags span { padding: .3em .9em; border: 2px solid var(--ink); border-radius: 999px; font-size: .8rem; font-weight: 500; }
+
+/* cards */
+.card { position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: clamp(260px, 30vw, 400px); padding: clamp(18px, 2.4vw, 34px); border: 2px solid var(--ink); border-radius: 28px; background: var(--bg); box-shadow: 10px 10px 0 var(--acc); will-change: transform; }
+.row { display: flex; justify-content: space-between; gap: 1rem; font-size: .8rem; font-weight: 500; color: var(--mut); }
+.amt { font-size: clamp(2.4rem, 5vw, 4.4rem); font-weight: 800; letter-spacing: -.04em; }
+.pill { align-self: flex-start; padding: .8em 1.5em; border-radius: 999px; background: var(--acc); color: var(--on); font-weight: 600; }
+.ok { font: 500 .85rem 'JetBrains Mono', ui-monospace, Menlo, monospace; }
+
+.bars { display: flex; flex: 1; align-items: flex-end; gap: 6px; margin: 1.5rem 0 0; }
+.bars i { flex: 1; height: var(--h); border-radius: 6px 6px 0 0; background: var(--ink); transform-origin: bottom; }
+.bars i:nth-child(4n) { background: var(--acc); }
+
+.win { align-items: center; overflow: hidden; }
+.win .row { align-self: stretch; position: relative; z-index: 2; }
+.ring { position: absolute; inset: 0; margin: auto; width: 62%; aspect-ratio: 1; border: 2px solid var(--ink); border-radius: 50%; }
+.r2 { width: 92%; border-style: dashed; opacity: .45; }
+.first { position: relative; margin: auto; font-size: clamp(4rem, 11vw, 9rem); font-weight: 800; letter-spacing: -.06em; }
+
+/* head row */
+.head { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+.head .node { margin: 0; }
+.mono { font-size: .95rem; font-weight: 500; }
+.merge { margin-left: auto; padding: .85em 1.5em; border: 2px solid var(--acc); border-radius: 999px; background: var(--acc); color: var(--on); font-weight: 600; text-decoration: none; transition: background .3s, color .3s, border-color .3s; }
+.merge:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+
+/* responsive & reduced-motion */
+@media (max-width: 800px) {
+  .chap { grid-template-columns: 36px minmax(0, 1fr); }
+  .vis { grid-column: 2; margin-top: 2.4rem; }
+  .big { left: 44px; font-size: 9rem; }
+  .merge { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rail-fill { transform: none; }
+  .node { background: var(--acc); }
+  .node.live { animation: none; }
+}
+</style>
+</head>
+<body>
+<header class="stub">
+  <p>↓ your hero lives here, scroll ↓</p>
+  <button id="tg" type="button">Switch theme</button>
+</header>
+
+<div class="workhost">
+  <section class="work">
+    <div class="wk-top">
+      <span>// 02 — selected work</span>
+      <span>$ git log --graph</span>
+    </div>
+    <p class="statement" id="statement">I build web apps that <em>take payments</em>, <em>track engineering teams</em>, and <em>win hackathons</em>.</p>
+
+    <div class="chain" id="chain">
+      <div class="rail"><i class="rail-fill"></i></div>
+
+      <article class="chap">
+        <b class="big" aria-hidden="true">01</b>
+        <span class="node"></span>
+        <div class="txt">
+          <span class="hash">a3f9c21 · feat: payments</span>
+          <h2 class="ttl">Checkout that actually gets paid</h2>
+          <p class="desc">Stripe and Paymob flows with webhooks, retries and clean failure states, so money lands and nobody has to chase it.</p>
+          <div class="tags"><span>Stripe</span><span>Paymob</span><span>Node.js</span><span>Angular</span></div>
+        </div>
+        <div class="vis">
+          <div class="card pay">
+            <div class="row"><span>Stripe</span><span>Paymob</span></div>
+            <div class="amt">EGP <b data-to="1250">0</b></div>
+            <div class="pill">Pay now</div>
+            <div class="ok">✓ payment confirmed</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="chap">
+        <b class="big" aria-hidden="true">02</b>
+        <span class="node"></span>
+        <div class="txt">
+          <span class="hash">7bd04e8 · feat: team-tracking</span>
+          <h2 class="ttl">Engineering teams, tracked on autopilot</h2>
+          <p class="desc">Git automation that turns commits and pull requests into live dashboards, so teams see progress without anyone asking.</p>
+          <div class="tags"><span>Git automation</span><span>Express</span><span>MongoDB</span><span>Angular</span></div>
+        </div>
+        <div class="vis">
+          <div class="card team">
+            <div class="row"><span>commits / week</span><span>main</span></div>
+            <div class="bars">
+              <i style="--h:35%"></i><i style="--h:55%"></i><i style="--h:42%"></i><i style="--h:78%"></i><i style="--h:60%"></i><i style="--h:48%"></i>
+              <i style="--h:90%"></i><i style="--h:66%"></i><i style="--h:52%"></i><i style="--h:84%"></i><i style="--h:70%"></i><i style="--h:100%"></i>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="chap">
+        <b class="big" aria-hidden="true">03</b>
+        <span class="node"></span>
+        <div class="txt">
+          <span class="hash">e41c9a0 · feat: hackathon</span>
+          <h2 class="ttl">A hackathon build that took 1st place</h2>
+          <p class="desc">NASA Space Apps Challenge: an idea, a team and a deadline, shipped as a working product and ranked first.</p>
+          <div class="tags"><span>NASA Space Apps</span><span>1st place</span></div>
+        </div>
+        <div class="vis">
+          <div class="card win">
+            <div class="row"><span>NASA Space Apps</span><span>winner</span></div>
+            <i class="ring r1"></i><i class="ring r2"></i>
+            <div class="first">1st</div>
+          </div>
+        </div>
+      </article>
+
+      <div class="head">
+        <span class="node on live"></span>
+        <span class="mono">HEAD → your-next-project</span>
+        <a class="merge" href="mailto:aliabueldahab2005@gmail.com">git merge you →</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+/* theme toggle */
+document.getElementById('tg').onclick = () => {
+  const r = document.documentElement;
+  r.dataset.theme = (r.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark' ? 'light' : 'dark';
+};
+
+/* animations */
+gsap.registerPlugin(ScrollTrigger);
+const host = document.querySelector('.workhost');
+const $ = (s, r = host) => r.querySelector(s);
+const $$ = (s, r = host) => Array.from(r.querySelectorAll(s));
+
+const split = (el, mask = false) => {
+  const out = [];
+  const walk = (n) => Array.from(n.childNodes).forEach(c => {
+    if (c.nodeType !== 3) return walk(c);
+    const f = document.createDocumentFragment();
+    (c.textContent || '').split(/(\s+)/).forEach(t => {
+      if (!t.trim()) return void f.append(t);
+      const s = document.createElement('span');
+      s.className = mask ? 'm' : 'w';
+      if (mask) {
+        const i = document.createElement('span');
+        i.className = 'mi';
+        i.textContent = t;
+        s.append(i);
+        out.push(i);
+      } else {
+        s.textContent = t;
+        out.push(s);
+      }
+      f.append(s);
+    });
+    c.replaceWith(f);
+  });
+  walk(el);
+  return out;
+};
+
+const mm = gsap.matchMedia();
+mm.add('(prefers-reduced-motion: no-preference)', () => {
+  const clamp = gsap.utils.clamp(-7, 7);
+
+  /* statement */
+  gsap.fromTo(split($('#statement')), { opacity: .14 }, {
+    opacity: 1, ease: 'none', stagger: .12,
+    scrollTrigger: { trigger: $('#statement'), start: 'top 82%', end: 'bottom 50%', scrub: .4 }
+  });
+
+  /* rail fill */
+  gsap.to($('.rail-fill'), {
+    scaleY: 1, ease: 'none',
+    scrollTrigger: { trigger: $('#chain'), start: 'top 60%', end: 'bottom 60%', scrub: .3 }
+  });
+
+  /* chapters */
+  const cards = [];
+  $$('.chap').forEach((ch, i) => {
+    const node = $('.node', ch), card = $('.card', ch), vis = $('.vis', ch), big = $('.big', ch);
+    const ttl = split($('.ttl', ch), true), bars = $$('.bars i', ch), rings = $$('.ring', ch), amt = $('[data-to]', ch);
+    const st = () => ({ trigger: ch, start: 'top bottom', end: 'bottom top', scrub: true });
+    cards.push(card);
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'expo.out' },
+      scrollTrigger: {
+        trigger: ch, start: 'top 60%',
+        toggleActions: 'play none none reverse',
+        onEnter: () => node.classList.add('on'),
+        onLeaveBack: () => node.classList.remove('on')
+      }
+    });
+
+    tl.from(node, { scale: 0, duration: .6, ease: 'back.out(3)' })
+      .from($('.hash', ch), { x: -24, autoAlpha: 0, duration: .7 }, '<.1')
+      .from(ttl, { yPercent: 110, rotation: 6, duration: 1.1, stagger: .07 }, '<.1')
+      .from([$('.desc', ch), ...$$('.tags span', ch)], { y: 30, autoAlpha: 0, duration: .8, stagger: .07 }, '<.3')
+      .from(card, { y: 120, rotation: 6, scale: .92, autoAlpha: 0, duration: 1.3 }, '<-.5');
+
+    if (amt) {
+      const o = { v: 0 };
+      tl.to(o, {
+        v: Number(amt.dataset['to']), duration: 1.8, ease: 'power2.out',
+        onUpdate: () => { amt.textContent = Math.round(o.v).toLocaleString('en-US'); }
+      }, '<.3').from($('.ok', ch), { autoAlpha: 0, y: 12, duration: .6 }, '>-.1');
+    }
+    if (bars.length) tl.from(bars, { scaleY: 0, duration: .9, stagger: .05, ease: 'back.out(1.6)' }, '<.3');
+    if (rings.length) {
+      tl.from(rings, { scale: 0, duration: 1.3, stagger: .15 }, '<.3')
+        .from($('.first', ch), { scale: .3, rotation: -14, autoAlpha: 0, duration: 1.1 }, '<.2');
+      gsap.to(rings[1], { rotation: 360, duration: 50, ease: 'none', repeat: -1 });
+    }
+
+    /* parallax */
+    gsap.fromTo(vis, { yPercent: 8 + i * 4 }, { yPercent: -(8 + i * 4), ease: 'none', scrollTrigger: st() });
+    gsap.fromTo(card, { rotateY: -9, rotateX: 4 }, { rotateY: 9, rotateX: -4, ease: 'none', scrollTrigger: st() });
+    gsap.fromTo(big, { xPercent: -10 }, { xPercent: 10, ease: 'none', scrollTrigger: st() });
+  });
+
+  /* velocity skew */
+  const skews = cards.map(c => gsap.quickTo(c, 'skewY', { duration: .5, ease: 'power3' }));
+  const setSkew = (v) => skews.forEach(s => s(v));
+  ScrollTrigger.create({ onUpdate: self => setSkew(clamp(self.getVelocity() / -300)) });
+  const reset = () => setSkew(0);
+  ScrollTrigger.addEventListener('scrollEnd', reset);
+
+  /* head outro */
+  gsap.from($$('.head > *'), {
+    y: 40, autoAlpha: 0, stagger: .12, duration: .9, ease: 'expo.out',
+    scrollTrigger: { trigger: $('.head'), start: 'top 90%', toggleActions: 'play none none reverse' }
+  });
+
+  document.fonts.ready.then(() => ScrollTrigger.refresh());
+  return () => ScrollTrigger.removeEventListener('scrollEnd', reset);
+});
+</script>
+</body>
+</html>
