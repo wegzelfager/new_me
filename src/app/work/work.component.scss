@@ -388,30 +388,6 @@
   }
 }
 
-.live-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: .4em;
-  margin-top: 1.6rem;
-  padding: .7em 1.4em;
-  border: 2px solid var(--ink);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--ink);
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: .85rem;
-  font-weight: 700;
-  text-decoration: none;
-  box-shadow: 3px 3px 0 var(--acc);
-  transition: background .25s, color .25s, transform .2s, box-shadow .2s;
-
-  &:hover {
-    background: var(--acc);
-    color: var(--on);
-    transform: translateY(-2px);
-    box-shadow: 3px 5px 0 var(--ink);
-  }
-}
 
 .win {
   align-items: center;
@@ -477,6 +453,146 @@
     background: transparent;
     color: var(--ink);
     border-color: var(--ink);
+  }
+}
+
+// ── Live / repo buttons ─────────────────────────────────
+.repo-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem;
+  margin-top: 1.6rem;
+}
+
+.live-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4em;
+  padding: .7em 1.4em;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .85rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 var(--acc);
+  transition: background .25s, color .25s, transform .2s, box-shadow .2s;
+
+  &:hover {
+    background: var(--acc);
+    color: var(--on);
+    transform: translateY(-2px);
+    box-shadow: 3px 5px 0 var(--ink);
+  }
+
+  &.secondary {
+    box-shadow: 3px 3px 0 color-mix(in srgb, var(--ink) 40%, transparent);
+  }
+}
+
+// ── Naptor dual-repo card ────────────────────────────────
+.naptor-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  overflow: hidden;
+  justify-content: flex-start;
+}
+
+.naptor-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background: color-mix(in srgb, var(--ink) 8%, var(--bg));
+  border-bottom: 2px solid var(--ink);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .82rem;
+  font-weight: 600;
+}
+
+.naptor-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: var(--acc);
+  color: var(--on);
+  font-size: .9rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.naptor-name { flex: 1; font-weight: 700; }
+
+.naptor-repos {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+}
+
+.repo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1.5px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  text-decoration: none;
+  color: var(--ink);
+  transition: background .2s;
+
+  &:last-child { border-bottom: none; }
+
+  &:hover {
+    background: color-mix(in srgb, var(--acc) 12%, transparent);
+    .repo-icon { color: var(--acc); }
+  }
+}
+
+.repo-icon {
+  font-size: .9rem;
+  color: var(--mut);
+  transition: color .2s;
+  flex-shrink: 0;
+}
+
+.repo-label {
+  flex: 1;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .85rem;
+  font-weight: 600;
+}
+
+.repo-tech {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .72rem;
+  font-weight: 500;
+  color: var(--mut);
+}
+
+.naptor-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding: 14px 20px;
+  border-top: 2px solid var(--ink);
+  background: color-mix(in srgb, var(--ink) 4%, var(--bg));
+
+  span {
+    padding: .25em .7em;
+    border: 1.5px solid color-mix(in srgb, var(--ink) 35%, transparent);
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: .72rem;
+    font-weight: 600;
+    color: var(--mut);
   }
 }
 
