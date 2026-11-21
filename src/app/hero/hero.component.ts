@@ -228,7 +228,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     document.fonts.ready.then(measure);
 
     // ---- marquee ----
-    const items = ['Angular', 'Node.js', 'Express', 'MongoDB', 'MySQL', 'Stripe', 'Paymob', 'GSAP', 'Git automation', 'NASA Space Apps 1st place'];
+    const items = ['Angular', 'Node.js', 'Express', 'MongoDB', 'MySQL', 'Stripe', 'Paymob', 'GSAP', 'Git automation', 'NASA Space Apps'];
     const set = items.map(t => '<span class="it">' + t + '</span>').join('');
     const tr = host.querySelector<HTMLElement>('#track')!;
     tr.innerHTML = set + set + set + set;
@@ -263,7 +263,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       return tl;
     }
 
-    const roles = ['Full-stack developer in Cairo', 'MEAN stack engineer', 'Stripe and Paymob integrator', 'NASA Space Apps 1st place'];
+    const roles = ['Full-stack developer in Cairo', 'MEAN stack engineer', 'Stripe and Paymob integrator', 'NASA Galactic Problem Solver'];
     let ri = 0;
     let nextRoleCall: ReturnType<typeof gsap.delayedCall> | null = null;
     function nextRole() { ri = (ri + 1) % roles.length; scr(roleEl, roles[ri], .9); nextRoleCall = gsap.delayedCall(3.2, nextRole); }

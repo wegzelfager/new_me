@@ -27,6 +27,14 @@ interface Release {
   diff: { sign: '+' | '−'; text: string }[];
 }
 
+interface CertificateItem {
+  issuer: string;
+  title: string;
+  date: string;
+  badge: string;
+  notes: string;
+}
+
 @Component({
   selector: 'app-experience',
   templateUrl: './experience.component.html',
@@ -40,66 +48,121 @@ export class ExperienceComponent implements AfterViewInit, OnDestroy {
 
   readonly releases: Release[] = [
     {
-      hash: 'd90b3a4 · chore: foundations',
-      ver: 'v0.1.0',
+      hash: '4f12e7c · feat: nti-fullstack',
+      ver: 'v2.0',
       kind: 'training',
-      role: 'Advanced Software Engineering',
-      org: 'Digital Egypt Pioneers Initiative',
-      when: 'Sep 2024 – Jul 2025',
-      desc: 'A year inside the DEPI advanced track, building the engineering foundations everything after it runs on.',
-      tags: ['Software Engineering', 'Architecture', 'Agile'],
-      stat: { to: 11, dec: 0, pre: '', suf: ' mo', text: '11 mo', label: 'months on the advanced track' },
+      role: 'Full-Stack Web Development Trainee',
+      org: 'National Telecommunication Institute (NTI)',
+      when: 'Jul 2025 – Aug 2025 · Cairo',
+      desc: 'Designed and developed responsive landing pages and custom web applications using Angular (frontend) and Node.js (backend). Integrated MySQL & MongoDB, auth, and client-tailored APIs.',
+      tags: ['Angular', 'Node.js', 'MongoDB', 'MySQL', 'REST APIs'],
+      stat: { to: 93.5, dec: 1, pre: '', suf: '%', text: '93.5%', label: 'MEAN-stack training score (120 hrs)' },
       diff: [
-        { sign: '+', text: 'advanced software engineering' },
-        { sign: '+', text: 'software architecture' },
+        { sign: '+', text: 'responsive landing pages & interfaces' },
+        { sign: '+', text: 'Angular frontend & Node.js backend' },
+        { sign: '+', text: 'MySQL & MongoDB auth + APIs' },
+        { sign: '+', text: 'client-tailored web solutions' },
       ],
     },
     {
-      hash: '4f12e7c · chore: security',
-      ver: 'v0.2.0',
-      kind: 'training',
-      role: 'Backend & Web Security',
-      org: 'National Telecommunication Institute',
-      when: 'Jul 2025 – Aug 2025',
-      desc: 'An intensive NTI program on backend engineering and the security habits that production web apps need.',
-      tags: ['Backend', 'Web Security'],
-      stat: { to: 2, dec: 0, pre: '', suf: ' mo', text: '2 mo', label: 'months, backend and web security' },
+      hash: '6e92b1a · feat: asu-backend',
+      ver: 'v1.2',
+      kind: 'seasonal',
+      role: 'Back End Developer (Seasonal)',
+      org: 'Ain Shams University',
+      when: 'Jul 2025 – Aug 2025 · Cairo, on-site',
+      desc: 'Developed APIs for university projects using Node.js and MySQL. Integrated JWT authentication and role-based access control (RBAC), and improved database query performance.',
+      tags: ['Node.js', 'MySQL', 'Express', 'JWT', 'RBAC'],
+      stat: { to: 100, dec: 0, pre: '', suf: '%', text: '100%', label: 'on-site university APIs delivered' },
       diff: [
-        { sign: '+', text: 'backend engineering' },
-        { sign: '+', text: 'web security' },
+        { sign: '+', text: 'university project APIs (Node.js & MySQL)' },
+        { sign: '+', text: 'JWT authentication & role-based RBAC' },
+        { sign: '−', text: 'redundant database query overhead' },
       ],
     },
     {
-      hash: 'b82a6d3 · feat: banking',
-      ver: 'v1.0.0',
-      kind: 'contract',
-      role: 'Full Stack Developer',
+      hash: 'b82a6d3 · feat: abe-internship',
+      ver: 'v1.1',
+      kind: 'internship',
+      role: 'Summer Intern',
       org: 'Agricultural Bank of Egypt',
-      when: 'Aug 2025 – Feb 2026',
-      desc: 'Enterprise Angular and Node.js apps for internal banking operations, locked down with RBAC and secure authentication.',
-      tags: ['Angular', 'Node.js', 'Express', 'MongoDB', 'MySQL'],
-      stat: { to: 25, dec: 0, pre: '+', suf: '%', text: '+25%', label: 'data retrieval efficiency' },
+      when: 'Aug 2025 – Sep 2025 · Cairo',
+      desc: 'Completed a one-month summer internship with hands-on exposure to enterprise workplace dynamics and banking workflows. Explored banking backend systems (ASP.NET and C#).',
+      tags: ['Banking Operations', 'Enterprise', 'ASP.NET', 'C#'],
+      stat: { to: 1, dec: 0, pre: '', suf: ' mo', text: '1 mo', label: 'enterprise banking summer internship' },
       diff: [
-        { sign: '+', text: 'granular RBAC and secure auth' },
-        { sign: '+', text: 'legacy pipelines moved to MongoDB and MySQL' },
-        { sign: '−', text: 'redundant query overhead' },
+        { sign: '+', text: 'enterprise workplace dynamics' },
+        { sign: '+', text: 'banking operational workflows' },
+        { sign: '+', text: 'ASP.NET and C# backend exposure' },
       ],
     },
     {
-      hash: '9ce03f1 · feat: freelance',
-      ver: 'HEAD',
-      kind: 'live',
-      role: 'Full Stack Developer',
-      org: 'Freelance, international clients',
-      when: 'Jul 2024 – now',
-      desc: 'Production Angular and Node.js apps shipped on sprint timelines, with payment infrastructure and webhooks built to stay up.',
-      tags: ['Angular', 'Node.js', 'Stripe', 'Paymob'],
-      stat: { to: 99.9, dec: 1, pre: '', suf: '%', text: '99.9%', label: 'uptime on transaction pipelines' },
+      hash: 'd90b3a4 · feat: depi-trainee',
+      ver: 'v1.0',
+      kind: 'training',
+      role: 'Software Developer Trainee (Angular)',
+      org: 'Digital Egypt Pioneers Initiative (DEPI)',
+      when: 'Oct 2024 – Jun 2025',
+      desc: 'Intensive training in web development with a focus on Angular, TypeScript, and Node.js. Built real-world agile projects with modern SCSS, state management, and REST APIs.',
+      tags: ['Angular', 'TypeScript', 'SCSS', 'REST APIs', 'Agile'],
+      stat: { to: 9, dec: 0, pre: '', suf: ' mo', text: '9 mo', label: 'months of intensive Angular training' },
       diff: [
-        { sign: '+', text: 'Stripe and Paymob billing automation' },
-        { sign: '+', text: 'webhook handlers' },
-        { sign: '−', text: '30% average API latency' },
+        { sign: '+', text: 'intensive Angular & TypeScript training' },
+        { sign: '+', text: 'REST APIs & state management' },
+        { sign: '+', text: 'real-world agile team projects' },
       ],
+    },
+  ];
+
+  readonly certificates: CertificateItem[] = [
+    {
+      issuer: 'NTI & ITIDA (MCIT)',
+      title: 'MEAN-Stack Web Development Summer Training',
+      date: 'Jul 2025 – Aug 2025',
+      badge: 'Score: 93.5%',
+      notes: '120 hours: 90h technical (MongoDB, Express, Angular, Node.js) + 30h freelancing skills.',
+    },
+    {
+      issuer: 'Digital Egypt Pioneers (DEPI, MCIT)',
+      title: 'Angular Frontend Web Developer',
+      date: 'Oct 2024 – Jun 2025',
+      badge: 'Training Track',
+      notes: 'SPAs with Angular, TypeScript, SCSS, REST APIs, state management, capstone projects.',
+    },
+    {
+      issuer: 'DEPI & Berlitz',
+      title: 'Business English Track, Level 2',
+      date: '2024 – 2025',
+      badge: 'Berlitz Certified',
+      notes: 'Professional business English communication, workplace presentations, and technical writing.',
+    },
+    {
+      issuer: 'NASA Space Apps Cairo',
+      title: 'International Space Apps Challenge 2025',
+      date: '2025',
+      badge: 'Participation Certificate',
+      notes: '"Galactic Problem Solver" participation certificate for solving space science challenges.',
+    },
+    {
+      issuer: 'Google & ITI',
+      title: 'Build with AI: Masr Edition',
+      date: 'May 2026',
+      badge: 'Attendance Certificate',
+      notes: 'Virtual technical sessions exploring Generative AI and the Gemini API.',
+    },
+    {
+      issuer: 'Ain Shams University, Faculty of Science',
+      title: 'Backend & API Training',
+      date: 'Jul 2025 – Aug 2025',
+      badge: 'Technical Training',
+      notes: 'Intensive backend development with Node.js, Express.js, and RESTful API architecture.',
+    },
+    {
+      issuer: 'Agricultural Bank of Egypt',
+      title: 'Enterprise Banking Summer Internship',
+      date: 'Aug 2025 – Sep 2025',
+      badge: 'One-Month Internship',
+      notes: 'Workplace exposure to operational banking workflows, financial technology, and backend systems.',
     },
   ];
 

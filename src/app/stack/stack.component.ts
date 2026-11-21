@@ -39,7 +39,7 @@ export class StackComponent implements AfterViewInit, OnDestroy {
   readonly commits: Record<number, CommitItem> = {
     1: { hash: 'a3f9c21', title: 'Checkout that actually gets paid', target: 0 },
     2: { hash: '7bd04e8', title: 'Engineering teams, tracked on autopilot', target: 1 },
-    3: { hash: 'e41c9a0', title: 'A hackathon build that took 1st place', target: 2 },
+    3: { hash: 'e41c9a0', title: 'NASA Space Apps Galactic Problem Solver', target: 2 },
   };
 
   readonly tools: ToolItem[] = [

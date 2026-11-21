@@ -152,6 +152,30 @@
   color: color-mix(in srgb, var(--bg) 60%, transparent);
 }
 
+.sk-exposure {
+  margin-top: clamp(24px, 4vw, 36px);
+  padding: 16px 20px;
+  border: 2px dashed color-mix(in srgb, var(--bg) 28%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--bg) 4%, transparent);
+}
+
+.sk-exposure-label {
+  display: block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .8rem;
+  font-weight: 500;
+  color: var(--acc);
+}
+
+.sk-exposure-val {
+  margin: 6px 0 0;
+  font-size: clamp(.88rem, 1.3vw, 1.05rem);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--bg);
+}
+
 /* Sticky Terminal Card */
 .sk-terminal-wrap {
   position: sticky;
