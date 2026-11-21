@@ -380,10 +380,36 @@
   font-size: .75rem;
   font-weight: 700;
   box-shadow: 2px 2px 0 var(--ink);
+  text-decoration: none;
   transition: transform .2s ease;
 
   &:hover {
     transform: translateY(-2px);
+  }
+}
+
+.live-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4em;
+  margin-top: 1.6rem;
+  padding: .7em 1.4em;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .85rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 var(--acc);
+  transition: background .25s, color .25s, transform .2s, box-shadow .2s;
+
+  &:hover {
+    background: var(--acc);
+    color: var(--on);
+    transform: translateY(-2px);
+    box-shadow: 3px 5px 0 var(--ink);
   }
 }
 
