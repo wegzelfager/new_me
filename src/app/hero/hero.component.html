@@ -1,37 +1,50 @@
-<div #heroRoot>
-  <div id="boot"><pre id="bt"></pre></div>
-  <canvas id="bg"></canvas>
+<div #heroRoot id="heroRoot">
+  <div id="boot"><div id="bt" class="mono"></div><div id="cnt">000</div></div>
+  <div class="grain"></div>
   <div class="cur" id="dot"></div>
   <div class="cur" id="ring"></div>
-  <main class="hero">
+  <main class="hero" id="hero">
+    <div class="cols"></div>
+    <div class="glow" id="glow"></div>
     <header class="top">
       <a class="logo" href="#">Ali A.</a>
-      <div class="meta">
+      <span class="mono edt" style="color:var(--mut)">Portfolio — 2026</span>
+      <div class="meta mono">
         <span id="clock">Cairo</span>
-        <button class="tg mag" id="tg" type="button" aria-label="Switch theme">
-          <span class="tg-full">Switch theme</span><span class="tg-short">Theme</span>
-        </button>
+        <button class="tg mono mag" id="tg" type="button" aria-label="Switch theme">Theme</button>
       </div>
     </header>
-    <section class="mid">
-      <h1 aria-label="Ali Abueldahab"><span class="ln" aria-hidden="true">Ali</span><span class="ln" aria-hidden="true">Abueldahab</span></h1>
-    </section>
-    <div class="aside">
+    <h1 class="name" aria-label="Ali Abueldahab"><span class="ln" aria-hidden="true">Ali</span><span class="ln" aria-hidden="true">Abueldahab</span></h1>
+    <p class="tag">Full-stack developer, <em>based in Cairo.</em></p>
+    <div class="pwrap" id="pwrap"><img class="person" alt="Ali Abueldahab" src="assets/person.webp" draggable="false"></div>
+    <div class="info">
+      <div class="lab mono"><i></i>Available for new projects</div>
       <p class="role" id="role"></p>
       <p class="pitch">I build web apps that take payments, track engineering teams, and solve space challenges.</p>
       <div class="cta">
-        <a class="btn mag" href="mailto:aliabueldahab2005@gmail.com">Email me</a>
+        <a class="btn mag" href="mailto:aliabueldahab2005@gmail.com">Email me <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12L12 4M5 4h7v7"/></svg></a>
         <a class="btn ghost mag" href="https://github.com/aliabueldahab" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
-    <div class="pwrap" id="pwrap">
-      <img class="person" alt="Ali Abueldahab" src="assets/person.webp" width="547" height="1000" decoding="async" fetchpriority="high" draggable="false">
-      <svg class="arrows" viewBox="0 0 929 1000" aria-hidden="true">
-        <g><text x="40" y="108">hi, it's me</text><path d="M215 150C300 190 360 230 468 232"/><path d="M440 215L468 232L438 250"/></g>
-        <g><text x="30" y="700">Angular + Node.js</text><path d="M190 722C280 760 330 625 408 545"/><path d="M375 554L408 545L397 577"/></g>
-        <g><text x="20" y="940">Stripe + Paymob</text><path d="M245 905C310 915 340 850 366 800"/><path d="M338 820L366 800L366 834"/></g>
+    <ul class="stack mono">
+      <li><span>01</span><b>Angular + Node.js</b></li>
+      <li><span>02</span><b>Stripe + Paymob</b></li>
+      <li><span>03</span><b>NASA Space Apps</b></li>
+      <li>30.04°N 31.24°E</li>
+    </ul>
+    <div class="fog"></div>
+    <a class="badge mag" href="mailto:aliabueldahab2005@gmail.com" aria-label="Email me">
+      <svg viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="58"/>
+        <defs>
+          <path id="cp" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/>
+        </defs>
+        <g class="ring">
+          <text><textPath href="#cp" textLength="284" lengthAdjust="spacing">Available for projects · Cairo · Full-stack · </textPath></text>
+        </g>
+        <path class="ar" d="M45 75L75 45M51 45h24v24"/>
       </svg>
-    </div>
-    <div class="strip"><div class="track" id="track"></div></div>
+    </a>
+    <div class="strip mono"><div class="track" id="track"></div></div>
   </main>
 </div>

@@ -1,11 +1,13 @@
 /* Global tokens & theme */
 :root {
-  --bg: #ECEBFF;
-  --ink: #1B22C9;
-  --mut: #4A4F9E;
-  --acc: #FFC933;
-  --on: #0A0C2B;
-  color-scheme: light;
+  --bg: #06070d;
+  --ink: #f2eee6;
+  --mut: rgba(242, 238, 230, 0.55);
+  --ln: rgba(242, 238, 230, 0.09);
+  --acc: #ffd23f;
+  --on: #0a0b14;
+  --glow: rgba(35, 82, 255, 0.6);
+  color-scheme: dark;
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -13,6 +15,17 @@
   --sh: 4rem;
   --ph: calc(100svh - var(--sh) - 2.5rem);
   --pw: calc(var(--ph) * .547);
+}
+
+:root[data-theme="light"] {
+  --bg: #e9e5dc;
+  --ink: #0a0b14;
+  --mut: rgba(10, 11, 20, 0.55);
+  --ln: rgba(10, 11, 20, 0.1);
+  --acc: #1b4dff;
+  --on: #fff;
+  --glow: rgba(27, 77, 255, 0.35);
+  color-scheme: light;
 }
 
 @media (max-width: 768px) {
@@ -24,21 +37,14 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0A0C2B;
-    --ink: #E9EBFF;
-    --mut: #A5AAF0;
-    --acc: #FFD23F;
-    color-scheme: dark;
-  }
-}
-
 :root[data-theme="dark"] {
-  --bg: #0A0C2B;
-  --ink: #E9EBFF;
-  --mut: #A5AAF0;
-  --acc: #FFD23F;
+  --bg: #06070d;
+  --ink: #f2eee6;
+  --mut: rgba(242, 238, 230, 0.55);
+  --ln: rgba(242, 238, 230, 0.09);
+  --acc: #ffd23f;
+  --on: #0a0b14;
+  --glow: rgba(35, 82, 255, 0.6);
   color-scheme: dark;
 }
 
@@ -64,8 +70,9 @@ app-root {
 body {
   background: var(--bg);
   color: var(--ink);
-  font: 400 1rem/1.5 'Bricolage Grotesque', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font: 400 1rem/1.5 'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif;
   overflow-x: hidden;
+  transition: background 0.5s;
 }
 
 @media (pointer: fine) {
