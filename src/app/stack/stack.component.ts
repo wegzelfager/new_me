@@ -36,21 +36,25 @@ export class StackComponent implements AfterViewInit, OnDestroy {
   private ctx: ReturnType<typeof gsap.context> | null = null;
   private cleanups: Array<() => void> = [];
 
-  readonly commits: Record<number, CommitItem> = {
-    1: { hash: 'a3f9c21', title: 'Checkout that actually gets paid', target: 0 },
-    2: { hash: '7bd04e8', title: 'DevTrack — Workflow intelligence platform', target: 1 },
-    3: { hash: 'e41c9a0', title: 'NASA Space Apps Galactic Problem Solver', target: 2 },
+    readonly commits: Record<number, CommitItem> = {
+    1: { hash: 'a3f9c21', title: 'VitaTrex — The Vitamin World',              target: 0 },
+    2: { hash: 'b2e1f30', title: 'Kisho — Structure. Weight. Precision.',       target: 1 },
+    3: { hash: '7bd04e8', title: 'DevTrack — Workflow intelligence platform',   target: 2 },
+    4: { hash: 'c9d3a17', title: 'Naptor — Full-Stack Platform',                target: 3 },
+    5: { hash: 'e41c9a0', title: 'NASA Space Apps Galactic Problem Solver',     target: 4 },
   };
 
-  readonly tools: ToolItem[] = [
-    { name: 'Angular', commits: [1, 2] },
-    { name: 'Node.js', commits: [1] },
-    { name: 'Express', commits: [2] },
-    { name: 'MongoDB', commits: [2] },
-    { name: 'Stripe', commits: [1] },
-    { name: 'Paymob', commits: [1] },
-    { name: 'DevTrack', commits: [2] },
-    { name: 'NASA Space Apps', commits: [3] },
+      readonly tools: ToolItem[] = [
+    { name: 'Angular',          commits: [1, 2, 3, 4] },
+    { name: 'TypeScript',       commits: [1, 2, 3, 4] },
+    { name: 'JavaScript (ES6+)', commits: [1, 2, 3, 4, 5] },
+    { name: 'Node.js',          commits: [1, 2, 3, 4] },
+    { name: 'Express.js',       commits: [3, 4] },
+    { name: 'MongoDB',          commits: [3, 4] },
+    { name: 'REST APIs',        commits: [1, 2, 3, 4] },
+    { name: 'RxJS',             commits: [1, 3] },
+    { name: 'SCSS / CSS3',      commits: [1, 2, 3] },
+    { name: 'Git & GitHub',     commits: [1, 2, 3, 4, 5] },
   ];
 
   constructor(

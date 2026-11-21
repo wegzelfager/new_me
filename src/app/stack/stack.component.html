@@ -6,7 +6,7 @@
       <span>$ git grep --count</span>
     </div>
 
-    <p class="sk-statement" id="sk-statement">Eight tools. Three shipped commits. Pick one and see where it ran.</p>
+    <p class="sk-statement" id="sk-statement">Ten core skills. Five shipped releases. Pick one and see where it ran.</p>
 
     <div class="sk-grid">
       <!-- Tool list -->
@@ -25,14 +25,16 @@
               <i class="sk-dot" [class.on]="tool.commits.includes(1)"></i>
               <i class="sk-dot" [class.on]="tool.commits.includes(2)"></i>
               <i class="sk-dot" [class.on]="tool.commits.includes(3)"></i>
+              <i class="sk-dot" [class.on]="tool.commits.includes(4)"></i>
+              <i class="sk-dot" [class.on]="tool.commits.includes(5)"></i>
             </span>
             <span class="sk-count">×{{ tool.commits.length }}</span>
           </span>
         </button>
 
         <div class="sk-exposure">
-          <span class="sk-exposure-label">// Other / exposure</span>
-          <p class="sk-exposure-val">Generative AI and Gemini API (training), ASP.NET and C# (internship exposure)</p>
+          <span class="sk-exposure-label">// Integrations &amp; Infrastructure</span>
+          <p class="sk-exposure-val">Stripe &amp; Paymob (payment gateways), Vercel (cloud deployment), MySQL, Docker, Generative AI (Gemini API)</p>
         </div>
       </div>
 
