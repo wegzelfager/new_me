@@ -39,7 +39,7 @@
   overflow: clip;
   background: var(--bg);
   color: var(--ink);
-  padding: clamp(72px, 12vw, 180px) var(--px, 24px) clamp(130px, 22vw, 220px);
+  padding: clamp(72px, 12vw, 180px) var(--px, 24px) clamp(40px, 6vw, 80px);
   border-top: 2px solid var(--ink);
   border-radius: var(--r) var(--r) 0 0;
   box-shadow: 0 -10px 0 var(--acc);
@@ -608,8 +608,194 @@
   .merge { margin-left: 0; }
 }
 
+// ── Git Merge Transition Bridge to Stack ─────────────────
+.merge-bridge {
+  position: relative;
+  margin-top: clamp(40px, 8vw, 90px);
+  padding-bottom: clamp(60px, 10vw, 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.merge-svg {
+  position: absolute;
+  top: -24px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 1;
+}
+
+.ghost-rail {
+  stroke: var(--ink);
+  stroke-width: 2px;
+  stroke-dasharray: 4 6;
+  opacity: 0.2;
+}
+
+.branch-track {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2px;
+  opacity: 0.15;
+}
+
+.branch-active {
+  fill: none;
+  stroke: url(#mergeGrad);
+  stroke-width: 3.5px;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 6px rgba(255, 210, 63, 0.7));
+}
+
+.branch-particle {
+  fill: #ffd23f;
+  transform-origin: center;
+}
+
+.merge-cli {
+  position: relative;
+  z-index: 3;
+  margin: clamp(20px, 4vw, 50px) 0 clamp(30px, 5vw, 60px);
+  width: min(92%, 520px);
+  background: color-mix(in srgb, var(--ink) 6%, var(--bg));
+  border: 1.5px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  border-radius: 16px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35), 0 0 0 1px color-mix(in srgb, var(--acc) 20%, transparent);
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+.cli-top {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 16px;
+  background: color-mix(in srgb, var(--ink) 10%, var(--bg));
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.cli-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  opacity: 0.75;
+
+  &.red { background: #ff5f56; }
+  &.yellow { background: #ffbd2e; }
+  &.green { background: #27c93f; }
+}
+
+.cli-title {
+  margin-left: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--mut);
+  letter-spacing: 0.05em;
+}
+
+.cli-badge {
+  margin-left: auto;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--acc);
+  background: color-mix(in srgb, var(--acc) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--acc) 30%, transparent);
+  border-radius: 999px;
+  padding: 0.2em 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.cli-body {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cli-cmd {
+  margin: 0;
+  font-size: clamp(0.8rem, 1.6vw, 0.95rem);
+  color: var(--ink);
+  font-weight: 600;
+
+  .prompt {
+    color: var(--acc);
+    margin-right: 8px;
+    font-weight: 700;
+  }
+
+  em {
+    font-style: normal;
+    color: var(--acc);
+  }
+}
+
+.cli-res {
+  margin: 0;
+  font-size: clamp(0.72rem, 1.4vw, 0.82rem);
+  color: var(--mut);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .tick {
+    color: #27c93f;
+    font-weight: bold;
+  }
+}
+
+.merge-junction {
+  position: relative;
+  z-index: 3;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.junction-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--acc);
+  border-radius: 50%;
+  animation: junctionPulse 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
+.junction-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--acc);
+  box-shadow: 0 0 16px var(--acc);
+}
+
+@keyframes junctionPulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rail-fill { transform: none; }
   .node { background: var(--acc); }
   .node.live { animation: none; }
+  .junction-ring { animation: none; }
 }

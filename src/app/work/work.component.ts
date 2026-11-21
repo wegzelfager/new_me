@@ -221,6 +221,119 @@ export class WorkComponent implements AfterViewInit, OnDestroy {
           });
         }
 
+        // ── Merge Bridge Transition to Stack ──
+        const bridge = $('#mergeBridge');
+        const branchActive = $('#branchActive') as SVGPathElement | null;
+        const branchTrack = $('#branchTrack') as SVGPathElement | null;
+        const ghostRail = $('#ghostRail') as SVGLineElement | null;
+        const mergeSvg = $('#mergeSvg') as SVGSVGElement | null;
+        const particle = $('#branchParticle');
+        const cli = $('#mergeCli');
+        const junction = $('#mergeJunction');
+
+        if (bridge && branchActive && mergeSvg && branchTrack) {
+          let len = 0;
+          const updatePath = () => {
+            const w = bridge.clientWidth || 1000;
+            const h = bridge.clientHeight || 220;
+            mergeSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+            const startX = 12;
+            const endX = w / 2;
+            const d = `M ${startX} 0 C ${startX} ${h * 0.55}, ${endX} ${h * 0.4}, ${endX} ${h}`;
+            branchTrack.setAttribute('d', d);
+            branchActive.setAttribute('d', d);
+            if (ghostRail) {
+              ghostRail.setAttribute('x1', `${startX}`);
+              ghostRail.setAttribute('x2', `${startX}`);
+              ghostRail.setAttribute('y1', '0');
+              ghostRail.setAttribute('y2', `${h}`);
+            }
+            try {
+              len = branchActive.getTotalLength();
+            } catch (e) {}
+          };
+
+          updatePath();
+          window.addEventListener('resize', updatePath);
+          this.cleanups.push(() => window.removeEventListener('resize', updatePath));
+
+          const o = { t: 0 };
+          const bridgeTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: bridge,
+              start: 'top 85%',
+              end: 'bottom 90%',
+              scrub: 0.6,
+              invalidateOnRefresh: true,
+            },
+          });
+
+          bridgeTl
+            .fromTo(branchActive, { strokeDashoffset: 1 }, { strokeDashoffset: 0, ease: 'none', duration: 1 }, 0)
+            .fromTo(
+              o,
+              { t: 0 },
+              {
+                t: 1,
+                ease: 'none',
+                duration: 1,
+                onUpdate: () => {
+                  if (particle && len) {
+                    const p = branchActive.getPointAtLength(o.t * len);
+                    particle.setAttribute('cx', p.x.toFixed(1));
+                    particle.setAttribute('cy', p.y.toFixed(1));
+                  }
+                },
+              },
+              0
+            );
+
+          if (cli) {
+            gsap.from(cli, {
+              y: 50,
+              autoAlpha: 0,
+              scale: 0.94,
+              duration: 0.8,
+              ease: 'back.out(1.8)',
+              scrollTrigger: {
+                trigger: cli,
+                start: 'top 88%',
+                toggleActions: 'play none none reverse',
+              },
+            });
+          }
+
+          if (junction) {
+            gsap.from(junction, {
+              scale: 0,
+              autoAlpha: 0,
+              duration: 0.6,
+              ease: 'back.out(3)',
+              scrollTrigger: {
+                trigger: junction,
+                start: 'top 92%',
+                toggleActions: 'play none none reverse',
+              },
+            });
+          }
+
+          const workMain = host.querySelector<HTMLElement>('.work');
+          if (workMain) {
+            gsap.to(workMain, {
+              scale: 0.97,
+              y: 45,
+              opacity: 0.82,
+              ease: 'power1.inOut',
+              scrollTrigger: {
+                trigger: bridge,
+                start: 'bottom 85%',
+                end: 'bottom 20%',
+                scrub: true,
+              },
+            });
+          }
+        }
+
         if (document.fonts?.ready) {
           document.fonts.ready.then(() => ScrollTrigger.refresh());
         }

@@ -27,13 +27,32 @@
   top: 0;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: .45em 1.1em;
+  padding: .5em 1.3em;
   border: 2px solid var(--ink);
   border-radius: 999px;
   background: var(--acc);
   color: var(--on);
-  font: 500 .85rem 'JetBrains Mono', ui-monospace, monospace;
+  font: 600 .85rem 'JetBrains Mono', ui-monospace, monospace;
   white-space: nowrap;
+  box-shadow: 0 4px 18px rgba(255, 210, 63, 0.4), 0 0 0 1px var(--ink);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s;
+  cursor: default;
+
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--on);
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  &:hover {
+    transform: translate(-50%, -55%) scale(1.06);
+    box-shadow: 0 8px 26px rgba(255, 210, 63, 0.65);
+  }
 }
 
 .mono, .hash, .tags span, .tags a, .top, .pg span, .cap, .lg, .db, small, .pm {

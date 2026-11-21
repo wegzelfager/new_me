@@ -324,6 +324,21 @@ export class StackComponent implements AfterViewInit, OnDestroy {
           }
         );
 
+        const stackTag = q<HTMLElement>('.stack-tag');
+        if (stackTag) {
+          gsap.from(stackTag, {
+            scale: 0.6,
+            autoAlpha: 0,
+            duration: 0.7,
+            ease: 'back.out(2.5)',
+            scrollTrigger: {
+              trigger: skEl,
+              start: 'top 96%',
+              toggleActions: 'play none none reverse',
+            },
+          });
+        }
+
         // 2. Scrub statement illumination
         if (stEl) {
           const wSpans = Array.from(stEl.querySelectorAll<HTMLElement>('.w'));
