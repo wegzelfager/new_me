@@ -1,3 +1,5 @@
+@import 'lenis/dist/lenis.css';
+
 /* Global tokens & theme */
 :root {
   --bg: #ECEBFF;
@@ -44,7 +46,6 @@
 
 html {
   scroll-padding-top: env(safe-area-inset-top, 0px);
-  scroll-behavior: smooth;
 }
 
 html, body {
