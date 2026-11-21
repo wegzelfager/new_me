@@ -218,12 +218,32 @@
   z-index: 1;
 }
 
+.xp-hash-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: 1.1rem;
+}
+
 .xp-hash {
-  display: block;
-  margin-bottom: 1.2rem;
   font-size: .85rem;
   font-weight: 500;
   color: var(--mut);
+}
+
+.xp-proof-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .22em .75em;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--acc);
+  color: var(--on);
+  font-size: .75rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .xp-ttl {
@@ -631,107 +651,6 @@
     color: var(--mut);
     letter-spacing: .05em;
   }
-}
-
-/* Verified Credentials & Certificates */
-.xp-certs-wrap {
-  margin-top: clamp(64px, 10vw, 120px);
-  padding: 0 var(--px, 24px);
-  position: relative;
-  z-index: 2;
-}
-
-.xp-certs-top {
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
-  margin-bottom: clamp(24px, 4vw, 44px);
-}
-
-.xp-certs-tag {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: .85rem;
-  font-weight: 500;
-  color: var(--mut);
-}
-
-.xp-certs-head {
-  margin: 0;
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  font-weight: 800;
-  letter-spacing: -.03em;
-  color: var(--ink);
-}
-
-.xp-certs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
-  gap: clamp(16px, 2.5vw, 24px);
-}
-
-.xp-cert-card {
-  display: flex;
-  flex-direction: column;
-  gap: .8rem;
-  padding: clamp(18px, 2vw, 24px);
-  border: 2px solid var(--ink);
-  border-radius: 20px;
-  background: var(--bg);
-  box-shadow: 6px 6px 0 var(--acc);
-  transition: transform .25s cubic-bezier(.2, 0, 0, 1), box-shadow .25s cubic-bezier(.2, 0, 0, 1);
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 8px 8px 0 var(--ink);
-  }
-}
-
-.xp-cert-badge-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: .6rem;
-}
-
-.xp-cert-badge {
-  padding: .25em .8em;
-  border: 1.5px solid var(--ink);
-  border-radius: 999px;
-  background: var(--acc);
-  color: var(--on);
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: .75rem;
-  font-weight: 600;
-}
-
-.xp-cert-date {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: .75rem;
-  font-weight: 500;
-  color: var(--mut);
-}
-
-.xp-cert-title {
-  margin: 0;
-  font-size: 1.15rem;
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--ink);
-}
-
-.xp-cert-issuer {
-  margin: 0;
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: .82rem;
-  font-weight: 500;
-  color: var(--mut);
-}
-
-.xp-cert-notes {
-  margin: .2rem 0 0;
-  font-size: .88rem;
-  line-height: 1.45;
-  color: var(--ink);
 }
 
 @media (prefers-reduced-motion: reduce) {

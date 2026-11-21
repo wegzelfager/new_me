@@ -7,6 +7,7 @@ import { HeroComponent } from './hero/hero.component';
 import { WorkComponent } from './work/work.component';
 import { StackComponent } from './stack/stack.component';
 import { ExperienceComponent } from './experience/experience.component';
+import { CertificatesComponent } from './certificates/certificates.component';
 import { ContactComponent } from './contact/contact.component';
 
 @NgModule({
@@ -16,6 +17,7 @@ import { ContactComponent } from './contact/contact.component';
     WorkComponent,
     StackComponent,
     ExperienceComponent,
+    CertificatesComponent,
     ContactComponent,
   ],
   imports: [

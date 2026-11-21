@@ -25,14 +25,7 @@ interface Release {
   tags: string[];
   stat: { to: number; dec: number; pre: string; suf: string; text: string; label: string };
   diff: { sign: '+' | '−'; text: string }[];
-}
-
-interface CertificateItem {
-  issuer: string;
-  title: string;
-  date: string;
-  badge: string;
-  notes: string;
+  proof?: string;
 }
 
 @Component({
@@ -56,6 +49,7 @@ export class ExperienceComponent implements AfterViewInit, OnDestroy {
       when: 'Jul 2025 – Aug 2025 · Cairo',
       desc: 'Designed and developed responsive landing pages and custom web applications using Angular (frontend) and Node.js (backend). Integrated MySQL & MongoDB, auth, and client-tailored APIs.',
       tags: ['Angular', 'Node.js', 'MongoDB', 'MySQL', 'REST APIs'],
+      proof: 'Certificate · 93.5% (120 hrs)',
       stat: { to: 93.5, dec: 1, pre: '', suf: '%', text: '93.5%', label: 'MEAN-stack training score (120 hrs)' },
       diff: [
         { sign: '+', text: 'responsive landing pages & interfaces' },
@@ -73,6 +67,7 @@ export class ExperienceComponent implements AfterViewInit, OnDestroy {
       when: 'Jul 2025 – Aug 2025 · Cairo, on-site',
       desc: 'Developed APIs for university projects using Node.js and MySQL. Integrated JWT authentication and role-based access control (RBAC), and improved database query performance.',
       tags: ['Node.js', 'MySQL', 'Express', 'JWT', 'RBAC'],
+      proof: 'Backend & API Certificate',
       stat: { to: 100, dec: 0, pre: '', suf: '%', text: '100%', label: 'on-site university APIs delivered' },
       diff: [
         { sign: '+', text: 'university project APIs (Node.js & MySQL)' },
@@ -89,6 +84,7 @@ export class ExperienceComponent implements AfterViewInit, OnDestroy {
       when: 'Aug 2025 – Sep 2025 · Cairo',
       desc: 'Completed a one-month summer internship with hands-on exposure to enterprise workplace dynamics and banking workflows. Explored banking backend systems (ASP.NET and C#).',
       tags: ['Banking Operations', 'Enterprise', 'ASP.NET', 'C#'],
+      proof: 'Internship Certificate',
       stat: { to: 1, dec: 0, pre: '', suf: ' mo', text: '1 mo', label: 'enterprise banking summer internship' },
       diff: [
         { sign: '+', text: 'enterprise workplace dynamics' },
@@ -105,64 +101,13 @@ export class ExperienceComponent implements AfterViewInit, OnDestroy {
       when: 'Oct 2024 – Jun 2025',
       desc: 'Intensive training in web development with a focus on Angular, TypeScript, and Node.js. Built real-world agile projects with modern SCSS, state management, and REST APIs.',
       tags: ['Angular', 'TypeScript', 'SCSS', 'REST APIs', 'Agile'],
+      proof: 'Angular Developer Certificate',
       stat: { to: 9, dec: 0, pre: '', suf: ' mo', text: '9 mo', label: 'months of intensive Angular training' },
       diff: [
         { sign: '+', text: 'intensive Angular & TypeScript training' },
         { sign: '+', text: 'REST APIs & state management' },
         { sign: '+', text: 'real-world agile team projects' },
       ],
-    },
-  ];
-
-  readonly certificates: CertificateItem[] = [
-    {
-      issuer: 'NTI & ITIDA (MCIT)',
-      title: 'MEAN-Stack Web Development Summer Training',
-      date: 'Jul 2025 – Aug 2025',
-      badge: 'Score: 93.5%',
-      notes: '120 hours: 90h technical (MongoDB, Express, Angular, Node.js) + 30h freelancing skills.',
-    },
-    {
-      issuer: 'Digital Egypt Pioneers (DEPI, MCIT)',
-      title: 'Angular Frontend Web Developer',
-      date: 'Oct 2024 – Jun 2025',
-      badge: 'Training Track',
-      notes: 'SPAs with Angular, TypeScript, SCSS, REST APIs, state management, capstone projects.',
-    },
-    {
-      issuer: 'DEPI & Berlitz',
-      title: 'Business English Track, Level 2',
-      date: '2024 – 2025',
-      badge: 'Berlitz Certified',
-      notes: 'Professional business English communication, workplace presentations, and technical writing.',
-    },
-    {
-      issuer: 'NASA Space Apps Cairo',
-      title: 'International Space Apps Challenge 2025',
-      date: '2025',
-      badge: 'Participation Certificate',
-      notes: '"Galactic Problem Solver" participation certificate for solving space science challenges.',
-    },
-    {
-      issuer: 'Google & ITI',
-      title: 'Build with AI: Masr Edition',
-      date: 'May 2026',
-      badge: 'Attendance Certificate',
-      notes: 'Virtual technical sessions exploring Generative AI and the Gemini API.',
-    },
-    {
-      issuer: 'Ain Shams University, Faculty of Science',
-      title: 'Backend & API Training',
-      date: 'Jul 2025 – Aug 2025',
-      badge: 'Technical Training',
-      notes: 'Intensive backend development with Node.js, Express.js, and RESTful API architecture.',
-    },
-    {
-      issuer: 'Agricultural Bank of Egypt',
-      title: 'Enterprise Banking Summer Internship',
-      date: 'Aug 2025 – Sep 2025',
-      badge: 'One-Month Internship',
-      notes: 'Workplace exposure to operational banking workflows, financial technology, and backend systems.',
     },
   ];
 
@@ -337,10 +282,11 @@ export class ExperienceComponent implements AfterViewInit, OnDestroy {
               onEnter: () => reveal(0),
             });
 
-            gsap
+            const pinTl = gsap
               .timeline({
                 defaults: { ease: 'none' },
                 scrollTrigger: {
+                  id: 'xp-pin-trigger',
                   trigger: pin,
                   start: 'top top',
                   end: () => `+=${dist() * 1.2}`,
@@ -363,6 +309,25 @@ export class ExperienceComponent implements AfterViewInit, OnDestroy {
                 { xPercent: -40 },
                 0,
               );
+
+            const onActivateReleaseDesk = (e: Event) => {
+              const custom = e as CustomEvent<{ ver: string }>;
+              const ver = custom.detail?.ver;
+              if (!ver) return;
+              const idx = this.releases.findIndex(r => r.ver === ver);
+              if (idx < 0) return;
+              const st = ScrollTrigger.getById('xp-pin-trigger');
+              if (st) {
+                const targetScroll = st.start + (st.end - st.start) * (idx / (n - 1));
+                window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+              } else {
+                pin.scrollIntoView({ behavior: 'smooth' });
+              }
+              setActive(idx);
+              reveal(idx);
+            };
+            window.addEventListener('activate-release', onActivateReleaseDesk);
+            this.cleanups.push(() => window.removeEventListener('activate-release', onActivateReleaseDesk));
 
             reset = () => setSkew(0);
             ScrollTrigger.addEventListener('scrollEnd', reset);
@@ -389,6 +354,18 @@ export class ExperienceComponent implements AfterViewInit, OnDestroy {
               track.scrollTo({ left: Math.max(0, offset), behavior: 'smooth' });
               updateMobileUI(idx);
             };
+
+            const onActivateReleaseMob = (e: Event) => {
+              const custom = e as CustomEvent<{ ver: string }>;
+              const ver = custom.detail?.ver;
+              if (!ver) return;
+              const idx = this.releases.findIndex(r => r.ver === ver);
+              if (idx < 0) return;
+              scrollToPanel(idx);
+              track.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            };
+            window.addEventListener('activate-release', onActivateReleaseMob);
+            this.cleanups.push(() => window.removeEventListener('activate-release', onActivateReleaseMob));
 
             mobTabs.forEach((tab, i) => {
               const handler = () => scrollToPanel(i);

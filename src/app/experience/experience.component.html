@@ -50,11 +50,16 @@
       </div>
 
       <div class="xp-track" id="xp-track">
-        <article class="xp-panel" *ngFor="let r of releases; let i = index" [attr.data-ver]="r.ver">
+        <article class="xp-panel" *ngFor="let r of releases; let i = index" [attr.data-ver]="r.ver" [attr.id]="'xp-' + r.ver">
           <b class="xp-big" aria-hidden="true">0{{ i + 1 }}</b>
 
           <div class="xp-txt">
-            <span class="xp-hash">{{ r.hash }}</span>
+            <div class="xp-hash-row">
+              <span class="xp-hash">{{ r.hash }}</span>
+              <span class="xp-proof-chip" *ngIf="r.proof">
+                <i aria-hidden="true">📜</i> {{ r.proof }}
+              </span>
+            </div>
             <h3 class="xp-ttl">{{ r.role }}</h3>
             <p class="xp-org">{{ r.org }} · {{ r.when }}</p>
             <p class="xp-desc">{{ r.desc }}</p>
@@ -91,25 +96,6 @@
           <span *ngFor="let r of releases; let i = index" [class.on]="i === 0"></span>
         </div>
         <span class="xp-mob-hint">← swipe to inspect →</span>
-      </div>
-    </div>
-
-    <!-- Verified Credentials & Certificates -->
-    <div class="xp-certs-wrap">
-      <div class="xp-certs-top">
-        <span class="xp-certs-tag">// verified credentials</span>
-        <h4 class="xp-certs-head">Certificates &amp; Training</h4>
-      </div>
-      <div class="xp-certs-grid">
-        <div class="xp-cert-card" *ngFor="let c of certificates">
-          <div class="xp-cert-badge-row">
-            <span class="xp-cert-badge">{{ c.badge }}</span>
-            <span class="xp-cert-date">{{ c.date }}</span>
-          </div>
-          <h5 class="xp-cert-title">{{ c.title }}</h5>
-          <p class="xp-cert-issuer">{{ c.issuer }}</p>
-          <p class="xp-cert-notes">{{ c.notes }}</p>
-        </div>
       </div>
     </div>
   </section>
