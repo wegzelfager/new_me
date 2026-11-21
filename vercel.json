@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "buildCommand": "ng build",
+  "outputDirectory": "dist/new_me",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
