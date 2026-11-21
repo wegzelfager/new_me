@@ -1,4 +1,4 @@
-@import 'lenis/dist/lenis.css';
+@import 'locomotive-scroll/locomotive-scroll.css';
 
 /* Global tokens & theme */
 :root {
@@ -48,7 +48,8 @@ html {
   scroll-padding-top: env(safe-area-inset-top, 0px);
 }
 
-html, body {
+html,
+body {
   min-height: 100%;
   margin: 0;
 }
@@ -58,7 +59,9 @@ app-root {
   min-height: 100%;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -70,10 +73,16 @@ body {
 }
 
 @media (pointer: fine) {
-  body, a, button { cursor: none; }
+
+  body,
+  a,
+  button {
+    cursor: none;
+  }
 }
 
-a:focus-visible, button:focus-visible {
+a:focus-visible,
+button:focus-visible {
   outline: 3px solid var(--acc);
   outline-offset: 4px;
 }
