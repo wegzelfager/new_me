@@ -68,11 +68,16 @@ export class MergeTransitionComponent implements AfterViewInit, OnDestroy {
     const lt = $('#lt');
     const ring = $('#ring');
     const o = { r: 0 };
+    let mx = 0;
+    let my = 0;
+
     const paint = () => {
       if (!lt || !ring) return;
-      lt.style.clipPath = 'circle(' + o.r + 'px at 50% 50%)';
+      lt.style.clipPath = 'circle(' + o.r + 'px at ' + mx.toFixed(1) + 'px ' + my.toFixed(1) + 'px)';
       const d = o.r * 2;
       ring.style.width = ring.style.height = d + 'px';
+      ring.style.left = mx.toFixed(1) + 'px';
+      ring.style.top = my.toFixed(1) + 'px';
       ring.style.opacity = o.r < 6 || o.r > Rmax() - 30 ? '0' : '1';
     };
 
@@ -107,49 +112,53 @@ export class MergeTransitionComponent implements AfterViewInit, OnDestroy {
         const KB = host.querySelector<HTMLElement>('.tk.s')!;
         const KM = host.querySelector<HTMLElement>('.tk.m')!;
 
-        let h = true;
+        // Always vertical (top to bottom flow)
         let U = 0, V = 0, cu = 0, cv = 0;
         let LA = 0, LB = 0, LM = 0;
         let fr: number[] = [];
         const g = { a: 0, b: 0, m: 0 };
         const c1 = (v: number) => Math.max(0, Math.min(1, v));
-        const X = (u: number, v: number): [number, number] => (h ? [u, v] : [v, u]);
+        // Vertical mapping: u is vertical (Y), v is horizontal (X)
+        const X = (u: number, v: number): [number, number] => [v, u];
         const S = (u: number, v: number) => X(u, v).map(n => n.toFixed(1)).join(' ');
 
         function layout() {
           const W = T.clientWidth;
           const H = T.clientHeight;
-          h = W >= H * 1.1;
-          U = h ? W : H;
-          V = h ? H : W;
-          cu = U / 2;
-          cv = V / 2;
+          U = H;
+          V = W;
+          cu = U * 0.46;
+          cv = V * 0.50;
           svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
 
-          const vA = V * (h ? 0.26 : 0.24);
-          const vB = V * (h ? 0.7 : 0.76);
+          const spread = Math.min(V * 0.24, 280);
+          const vA = cv - spread;
+          const vB = cv + spread;
+
           const br = (v: number) =>
-            'M' + S(0, v) + 'L' + S(U * 0.22, v) + 'C' + S(U * 0.38, v) + ' ' + S(U * 0.36, cv) + ' ' + S(cu, cv);
+            'M' + S(0, v) + 'L' + S(U * 0.18, v) + 'C' + S(U * 0.34, v) + ' ' + S(U * 0.32, cv) + ' ' + S(cu, cv);
 
           PA.setAttribute('d', br(vA));
           PB.setAttribute('d', br(vB));
-          PM.setAttribute('d', 'M' + S(cu, cv) + 'L' + S(U * 0.93, cv));
+          PM.setAttribute('d', 'M' + S(cu, cv) + 'L' + S(U * 0.90, cv));
           base.setAttribute('d', br(vA) + br(vB) + 'M' + S(cu, cv) + 'L' + S(U, cv));
 
           [
-            [0.08, vA],
-            [0.16, vA],
-            [0.08, vB],
-            [0.16, vB],
-            [0.66, cv],
-            [0.8, cv],
+            [0.07, vA],
+            [0.14, vA],
+            [0.07, vB],
+            [0.14, vB],
+            [0.62, cv],
+            [0.76, cv],
           ].forEach(([f, v], i) => {
             const [x, y] = X(U * f, v);
             nds[i].setAttribute('cx', x.toString());
             nds[i].setAttribute('cy', y.toString());
           });
 
-          const [mx, my] = X(cu, cv);
+          const [cxPos, cyPos] = X(cu, cv);
+          mx = cxPos;
+          my = cyPos;
           mg.setAttribute('cx', mx.toString());
           mg.setAttribute('cy', my.toString());
 
@@ -157,12 +166,12 @@ export class MergeTransitionComponent implements AfterViewInit, OnDestroy {
           LB = PB.getTotalLength();
           LM = PM.getTotalLength();
           fr = [
-            (0.08 * U) / LA,
-            (0.16 * U) / LA,
-            (0.08 * U) / LB,
-            (0.16 * U) / LB,
-            (0.66 * U - cu) / LM,
-            (0.8 * U - cu) / LM,
+            (0.07 * U) / LA,
+            (0.14 * U) / LA,
+            (0.07 * U) / LB,
+            (0.14 * U) / LB,
+            (0.62 * U - cu) / LM,
+            (0.76 * U - cu) / LM,
           ];
         }
 
@@ -190,6 +199,7 @@ export class MergeTransitionComponent implements AfterViewInit, OnDestroy {
         const onRefreshInit = () => {
           layout();
           render();
+          paint();
         };
         ScrollTrigger.addEventListener('refreshInit', onRefreshInit);
         this.cleanups.push(() => ScrollTrigger.removeEventListener('refreshInit', onRefreshInit));

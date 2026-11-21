@@ -119,19 +119,20 @@
 .term {
   position: absolute;
   z-index: 1;
-  left: clamp(16px, 4vw, 56px);
-  bottom: clamp(24px, 6vh, 64px);
-  width: min(calc(100vw - 32px), 470px);
+  left: clamp(20px, 4vw, 64px);
+  bottom: clamp(24px, 5vh, 60px);
+  width: min(calc(100vw - 32px), 440px);
   padding: 1rem 1.2rem;
   border: 1px solid rgba(233, 235, 255, 0.2);
   border-radius: 16px;
-  background: color-mix(in srgb, var(--dk) 86%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  font-size: clamp(0.8rem, 2.2vw, 1rem);
-  line-height: 1.9;
+  background: color-mix(in srgb, var(--dk) 88%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-size: clamp(0.8rem, 2vw, 0.95rem);
+  line-height: 1.85;
   color: var(--dkm);
-  min-height: 6.4em;
+  min-height: 6.2em;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
 
   div {
     white-space: pre;
@@ -141,13 +142,27 @@
 
   .ok {
     color: var(--acc);
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 768px) {
+  .term {
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 32px);
+    max-width: 420px;
+    bottom: 20px;
+    padding: 0.8rem 1rem;
+    font-size: 0.78rem;
+    min-height: 5.6em;
   }
 }
 
 .ring {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 46%;
   width: 0;
   height: 0;
   border: 3px solid var(--acc);
