@@ -38,7 +38,7 @@ export class StackComponent implements AfterViewInit, OnDestroy {
 
   readonly commits: Record<number, CommitItem> = {
     1: { hash: 'a3f9c21', title: 'Checkout that actually gets paid', target: 0 },
-    2: { hash: '7bd04e8', title: 'Engineering teams, tracked on autopilot', target: 1 },
+    2: { hash: '7bd04e8', title: 'DevTrack — Workflow intelligence platform', target: 1 },
     3: { hash: 'e41c9a0', title: 'NASA Space Apps Galactic Problem Solver', target: 2 },
   };
 
@@ -49,7 +49,7 @@ export class StackComponent implements AfterViewInit, OnDestroy {
     { name: 'MongoDB', commits: [2] },
     { name: 'Stripe', commits: [1] },
     { name: 'Paymob', commits: [1] },
-    { name: 'Git automation', commits: [2] },
+    { name: 'DevTrack', commits: [2] },
     { name: 'NASA Space Apps', commits: [3] },
   ];
 
