@@ -1,61 +1,122 @@
-<div class="stackhost" #stackHost>
+<div class="stackhost" #stackHost id="stack">
   <span class="tag stack-tag">git merge stack → main</span>
-  <section class="stack">
-    <div class="sk-top">
-      <span>// 03 — stack</span>
-      <span>$ git grep --count</span>
+  <section class="sk">
+    <div class="pad">
+      <div class="top">
+        <span>// 03 — stack</span>
+        <span>$ ls ~/skills --strong</span>
+      </div>
+      <p class="statement" id="st">The stack I trust <em>in production</em>, from the <em>first click</em> to the <em>last payment</em>.</p>
     </div>
 
-    <p class="sk-statement" id="sk-statement">Ten core skills. Five shipped releases. Pick one and see where it ran.</p>
-
-    <div class="sk-grid">
-      <!-- Tool list -->
-      <div class="sk-list" role="tablist" aria-label="Tech stack">
-        <button
-          *ngFor="let tool of tools"
-          type="button"
-          class="sk-row"
-          role="tab"
-          [attr.data-tool]="tool.name"
-          [attr.data-commits]="tool.commits.join(',')"
-        >
-          <span class="sk-name"><span class="sk-name-text">{{ tool.name }}</span></span>
-          <span class="sk-meta">
-            <span class="sk-dots" aria-hidden="true">
-              <i class="sk-dot" [class.on]="tool.commits.includes(1)"></i>
-              <i class="sk-dot" [class.on]="tool.commits.includes(2)"></i>
-              <i class="sk-dot" [class.on]="tool.commits.includes(3)"></i>
-              <i class="sk-dot" [class.on]="tool.commits.includes(4)"></i>
-              <i class="sk-dot" [class.on]="tool.commits.includes(5)"></i>
-            </span>
-            <span class="sk-count">×{{ tool.commits.length }}</span>
-          </span>
+    <div class="reel" id="reel">
+      <!-- Segmented Progress Bar -->
+      <div class="pg">
+        <button *ngFor="let s of skills" class="sg" [attr.aria-label]="s.label" type="button">
+          <b><i></i></b>
+          <span>{{ s.label }}</span>
         </button>
+      </div>
 
-        <div class="sk-exposure">
-          <span class="sk-exposure-label">// Integrations &amp; Infrastructure</span>
-          <p class="sk-exposure-val">Stripe &amp; Paymob (payment gateways), Vercel (cloud deployment), MySQL, Docker, Generative AI (Gemini API)</p>
+      <!-- Large Outlined Odometer Counter -->
+      <div class="cnt" aria-hidden="true">
+        <div class="cs">
+          <b *ngFor="let s of skills; let i = index">0{{ i + 1 }}</b>
         </div>
       </div>
 
-      <!-- Sticky Terminal -->
-      <div class="sk-terminal-wrap">
-        <div class="sk-terminal" aria-live="polite">
-          <div class="sk-term-header">
-            <span class="sk-term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-            <span class="sk-term-title">git log</span>
+      <!-- Text Column -->
+      <div class="txts">
+        <div *ngFor="let s of skills; let i = index; let last = last" class="tx">
+          <span class="hash o">{{ s.hash }} · {{ s.label }}</span>
+          <h2 class="ttl">{{ s.title }}</h2>
+          <p class="desc o">{{ s.description }}</p>
+          <div class="tags o">
+            <span *ngFor="let t of s.tags">{{ t }}</span>
+            <a *ngIf="last" href="#work" class="work-link">// view selected work ↗</a>
           </div>
-          <div class="sk-term-body">
-            <div class="sk-term-prompt">
-              <span class="sk-term-ps1">$</span>
-              <span class="sk-term-cmd" id="sk-cmd"></span>
-              <span class="sk-term-cursor" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <!-- Unframed Scenes Area -->
+      <div class="vs">
+        <!-- Scene 0: Real GSAP Eases Curves (injected via TS) -->
+        <div class="sc" id="s0"></div>
+
+        <!-- Scene 1: Request log -->
+        <div class="sc" id="s1">
+          <div class="lg"><b>GET</b><span>/api/products</span><i>200</i><em>12ms</em></div>
+          <div class="lg"><b>POST</b><span>/api/checkout</span><i>201</i><em>38ms</em></div>
+          <div class="lg"><b>GET</b><span>/api/orders/42</span><i>200</i><em>9ms</em></div>
+          <div class="lg"><b>POST</b><span>/api/login</span><i>401</i><em>4ms</em></div>
+          <div class="lg"><b>POST</b><span>/api/login</span><i class="bad">429</i><em>1ms</em></div>
+          <div class="lg"><b>POST</b><span>/api/webhook</span><i>200</i><em>21ms</em></div>
+          <p class="cap">auth · validate · rate-limit</p>
+        </div>
+
+        <!-- Scene 2: Redis cache latency -->
+        <div class="sc" id="s2">
+          <div><small>MISS · postgres</small><span class="big-num">48ms</span><i class="ln"></i></div>
+          <div><small>HIT · redis</small><span class="big-num">0.4ms</span><i class="ln hit"></i></div>
+          <p class="cap">the second read never touches the database</p>
+        </div>
+
+        <!-- Scene 3: MongoDB doc + PostgreSQL table -->
+        <div class="sc" id="s3">
+          <div class="db">
+            <div class="c">
+              <small>mongodb</small>
+              <p>&#123;</p>
+              <p>  _id: "ord_42",</p>
+              <p>  items: [ … ],</p>
+              <p class="k"><u></u>  status: "paid"</p>
+              <p>&#125;</p>
             </div>
-            <ul class="sk-term-results" id="sk-results"></ul>
+            <div class="c">
+              <small>postgresql</small>
+              <p>id │ user │ total</p>
+              <p>─────────────────</p>
+              <p class="k"><u></u>42 │ 7    │ 1200</p>
+              <p>43 │ 9    │ 640</p>
+            </div>
           </div>
-          <div class="sk-term-footer">
-            <button type="button" class="sk-term-btn" id="sk-scroll-btn">See it in my work →</button>
+          <p class="cap">right model per problem</p>
+        </div>
+
+        <!-- Scene 4: Payment Line Flow -->
+        <div class="sc" id="s4">
+          <svg viewBox="0 0 400 210">
+            <text x="20" y="46" font-size="34" font-weight="800" style="fill:var(--ink)">EGP 1,200</text>
+            <path d="M40 118H360" style="stroke:var(--hair);stroke-width:2"/>
+            <path pathLength="1" d="M40 118H360" style="stroke:#ffd23f;stroke-width:4;stroke-dasharray:1;stroke-linecap:round"/>
+            <circle cx="40" cy="118" r="9" style="fill:#ffd23f;fill-opacity:0;stroke:var(--ink);stroke-width:2"/>
+            <circle cx="147" cy="118" r="9" style="fill:#ffd23f;fill-opacity:0;stroke:var(--ink);stroke-width:2"/>
+            <circle cx="253" cy="118" r="9" style="fill:#ffd23f;fill-opacity:0;stroke:var(--ink);stroke-width:2"/>
+            <circle cx="360" cy="118" r="9" style="fill:#ffd23f;fill-opacity:0;stroke:var(--ink);stroke-width:2"/>
+            <g font-size="10" text-anchor="middle" style="fill:var(--mut)">
+              <text x="40" y="150">created</text>
+              <text x="147" y="150">pending</text>
+              <text x="253" y="150">webhook ✔</text>
+              <text x="360" y="150">paid</text>
+            </g>
+            <text class="dp" x="20" y="196" font-size="11" style="fill:var(--ink)">webhook ×2 → ignored (idempotent)</text>
+          </svg>
+          <p class="cap">retry-safe · no double charge</p>
+        </div>
+
+        <!-- Scene 5: PM2 Deployments -->
+        <div class="sc pm" id="s5">
+          <div>
+            <span class="big-num"><span class="a">4/4</span><span class="b">3/4</span></span>
+            <small>online</small>
           </div>
+          <div class="ws">
+            <div><i></i>api-0</div>
+            <div><i></i>api-1</div>
+            <div><i></i>api-2</div>
+            <div><i></i>api-3</div>
+          </div>
+          <p class="cap">pm2 reload api --update-env</p>
         </div>
       </div>
     </div>
