@@ -21,49 +21,22 @@
   color: var(--ink);
 }
 
-.stack-tag {
-  position: absolute;
-  z-index: 7;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: .5em 1.3em;
-  border: 2px solid var(--ink);
-  border-radius: 999px;
-  background: var(--acc);
-  color: var(--on);
-  font: 600 .85rem 'JetBrains Mono', ui-monospace, monospace;
-  white-space: nowrap;
-  box-shadow: 0 4px 18px rgba(255, 210, 63, 0.4), 0 0 0 1px var(--ink);
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s;
-  cursor: default;
-
-  &::before {
-    content: "";
-    display: inline-block;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--on);
-    margin-right: 8px;
-    vertical-align: middle;
-  }
-
-  &:hover {
-    transform: translate(-50%, -55%) scale(1.06);
-    box-shadow: 0 8px 26px rgba(255, 210, 63, 0.65);
-  }
-}
-
-.mono, .hash, .tags span, .tags a, .top, .pg span, .cap, .lg, .db, small, .pm {
+.mono,
+.hash,
+.tags span,
+.tags a,
+.top,
+.pg span,
+.cap,
+.lg,
+.db,
+small,
+.pm {
   font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
 }
 
 .sk {
   position: relative;
-  border-top: 2px solid var(--ink);
-  border-radius: 48px 48px 0 0;
-  box-shadow: 0 -10px 0 var(--acc);
   background: var(--bg);
   padding: clamp(56px, 9vw, 120px) 0 0;
   overflow: clip;
@@ -99,9 +72,11 @@
   .w {
     display: inline-block;
   }
+
   .statement em .w {
     background: linear-gradient(var(--acc), var(--acc)) 0 92% / 100% .14em no-repeat;
   }
+
   .m {
     display: inline-block;
     overflow: hidden;
@@ -109,6 +84,7 @@
     padding-bottom: .12em;
     margin-bottom: -.12em;
   }
+
   .mi {
     display: inline-block;
   }
@@ -199,7 +175,8 @@
 }
 
 /* Text and Visuals Columns */
-.txts, .vs {
+.txts,
+.vs {
   display: grid;
   position: relative;
   z-index: 1;
@@ -254,7 +231,8 @@
   gap: .5rem;
   margin-top: 1.4rem;
 
-  span, a {
+  span,
+  a {
     padding: .3em .9em;
     border: 2px solid var(--ink);
     border-radius: 999px;
@@ -482,7 +460,8 @@ small {
     display: block;
   }
 
-  .pg, .cnt {
+  .pg,
+  .cnt {
     display: none;
   }
 

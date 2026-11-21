@@ -307,39 +307,7 @@ export class StackComponent implements AfterViewInit, OnDestroy {
       const mm = gsap.matchMedia();
 
       mm.add('(prefers-reduced-motion: no-preference)', () => {
-        // 1. Scrub shell radius
-        gsap.fromTo(
-          skEl,
-          { borderTopLeftRadius: '64px', borderTopRightRadius: '64px' },
-          {
-            borderTopLeftRadius: '0px',
-            borderTopRightRadius: '0px',
-            ease: 'none',
-            scrollTrigger: {
-              trigger: skEl,
-              start: 'top bottom',
-              end: 'top top',
-              scrub: true,
-            },
-          }
-        );
-
-        const stackTag = q<HTMLElement>('.stack-tag');
-        if (stackTag) {
-          gsap.from(stackTag, {
-            scale: 0.6,
-            autoAlpha: 0,
-            duration: 0.7,
-            ease: 'back.out(2.5)',
-            scrollTrigger: {
-              trigger: skEl,
-              start: 'top 96%',
-              toggleActions: 'play none none reverse',
-            },
-          });
-        }
-
-        // 2. Scrub statement illumination
+        // 1. Scrub statement illumination
         if (stEl) {
           const wSpans = Array.from(stEl.querySelectorAll<HTMLElement>('.w'));
           gsap.fromTo(

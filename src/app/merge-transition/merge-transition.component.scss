@@ -1,0 +1,248 @@
+:host {
+  display: block;
+  position: relative;
+  z-index: 5;
+  --dk: #0A0C2B;
+  --dki: #E9EBFF;
+  --dkm: #A5AAF0;
+  --lt: #e8eaff;
+  --lti: #0d0d2b;
+  --ltm: #55587a;
+  --acc: #FFD23F;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+.tr {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--dk);
+  color: var(--dki);
+  font-family: Inter, system-ui, sans-serif;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(var(--dki) 1px, transparent 1.6px) 0 0/34px 34px;
+    opacity: 0.08;
+    -webkit-mask-image: radial-gradient(circle, #000 15%, transparent 72%);
+    mask-image: radial-gradient(circle, #000 15%, transparent 72%);
+  }
+}
+
+.gr {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  path {
+    fill: none;
+    stroke-width: 4.5;
+    stroke-linecap: round;
+  }
+
+  .base {
+    stroke: var(--dki);
+    opacity: 0.14;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    stroke-width: 2;
+  }
+}
+
+.pA, .pB, .pM {
+  filter: drop-shadow(0 0 7px rgba(255, 210, 63, 0.55));
+  stroke: var(--acc);
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.tk {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  padding: 0.4em 1em;
+  border: 2px solid var(--dki);
+  border-radius: 999px;
+  background: var(--dk);
+  color: var(--dki);
+  font-weight: 700;
+  font-size: clamp(1rem, 2.8vw, 1.6rem);
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+
+  &.s {
+    background: var(--acc);
+    border-color: var(--acc);
+    color: var(--dk);
+  }
+
+  &.m {
+    background: var(--dki);
+    color: var(--dk);
+  }
+}
+
+.nd {
+  fill: var(--dk);
+  stroke: var(--dki);
+  stroke-width: 2.5;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.mg {
+  fill: var(--acc);
+  stroke: var(--dki);
+  stroke-width: 3;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.term {
+  position: absolute;
+  z-index: 1;
+  left: clamp(16px, 4vw, 56px);
+  bottom: clamp(24px, 6vh, 64px);
+  width: min(calc(100vw - 32px), 470px);
+  padding: 1rem 1.2rem;
+  border: 1px solid rgba(233, 235, 255, 0.2);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--dk) 86%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: clamp(0.8rem, 2.2vw, 1rem);
+  line-height: 1.9;
+  color: var(--dkm);
+  min-height: 6.4em;
+
+  div {
+    white-space: pre;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  .ok {
+    color: var(--acc);
+  }
+}
+
+.ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border: 3px solid var(--acc);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-shadow: 0 0 50px rgba(255, 210, 63, 0.45), inset 0 0 50px rgba(255, 210, 63, 0.25);
+  opacity: 0;
+  z-index: 3;
+}
+
+.lt {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--lt);
+  color: var(--lti);
+  clip-path: circle(0px at 50% 50%);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.big {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin: 0;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: clamp(9rem, 36vw, 34rem);
+  line-height: 0.8;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--lti);
+  opacity: 0.14;
+  user-select: none;
+}
+
+.msg {
+  position: relative;
+  text-align: center;
+  padding: 0 5vw;
+
+  h3 {
+    margin: 1.2rem 0 0;
+    font-size: clamp(2.6rem, 9vw, 8rem);
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.05em;
+
+    em {
+      font-style: normal;
+      background: linear-gradient(var(--acc), var(--acc)) 0 92%/100% 0.14em no-repeat;
+    }
+  }
+
+  p {
+    margin: 1.4rem 0 0;
+    color: var(--ltm);
+    font-size: 0.85rem;
+  }
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.5em 1.2em;
+  border: 2px solid var(--lti);
+  border-radius: 999px;
+  background: var(--acc);
+  color: var(--lti);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+:host ::ng-deep {
+  .msg h3 .m {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
+  }
+
+  .msg h3 .mi {
+    display: inline-block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lt {
+    clip-path: none !important;
+  }
+  .ring {
+    display: none;
+  }
+}

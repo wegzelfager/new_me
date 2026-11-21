@@ -153,46 +153,6 @@
         <span class="mono">HEAD → your-next-project</span>
         <a class="merge" href="mailto:aliabueldahab2005@gmail.com">git merge you →</a>
       </div>
-
-      <!-- Creative Git Merge Transition Bridge to Stack -->
-      <div class="merge-bridge" id="mergeBridge">
-        <svg class="merge-svg" id="mergeSvg">
-          <defs>
-            <linearGradient id="mergeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#FFD23F" stop-opacity="0.8" />
-              <stop offset="60%" stop-color="#FFD23F" stop-opacity="1" />
-              <stop offset="100%" stop-color="#FFE885" stop-opacity="1" />
-            </linearGradient>
-            <filter id="glowFilter" x="-40%" y="-40%" width="180%" height="180%">
-              <feGaussianBlur stdDeviation="4" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-          </defs>
-          <line class="ghost-rail" id="ghostRail" x1="12" y1="0" x2="12" y2="220" />
-          <path class="branch-track" id="branchTrack" d="M 12 0 C 12 120, 500 80, 500 220" />
-          <path class="branch-active" id="branchActive" d="M 12 0 C 12 120, 500 80, 500 220" pathLength="1" />
-          <circle class="branch-particle" id="branchParticle" r="7" cx="12" cy="0" filter="url(#glowFilter)" />
-        </svg>
-
-        <div class="merge-cli" id="mergeCli">
-          <div class="cli-top">
-            <span class="cli-dot red"></span>
-            <span class="cli-dot yellow"></span>
-            <span class="cli-dot green"></span>
-            <span class="cli-title">git — branch-junction</span>
-            <span class="cli-badge">fast-forward</span>
-          </div>
-          <div class="cli-body">
-            <p class="cli-cmd"><span class="prompt">$</span> git merge origin/stack <em>--ff-only</em></p>
-            <p class="cli-res"><span class="tick">✔</span> 6 production skills · 0 conflicts · ready to ship</p>
-          </div>
-        </div>
-
-        <div class="merge-junction" id="mergeJunction">
-          <span class="junction-ring"></span>
-          <span class="junction-dot"></span>
-        </div>
-      </div>
     </div>
   </section>
 </div>
