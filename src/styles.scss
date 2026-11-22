@@ -24,26 +24,8 @@
   }
 }
 
-/* Lenis: auto-sets height:auto so scrollbar works correctly */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-.lenis:not(.lenis-autoToggle).lenis-stopped {
-  overflow: clip;
-}
-
-.lenis [data-lenis-prevent],
-.lenis [data-lenis-prevent-wheel],
-.lenis [data-lenis-prevent-touch] {
-  overscroll-behavior: contain;
-}
-
 html {
   scroll-padding-top: env(safe-area-inset-top, 0px);
-  /* NOTE: scroll-behavior:smooth is intentionally removed.
-     It conflicts with Lenis lerp and GSAP scrub timelines. */
 }
 
 html,

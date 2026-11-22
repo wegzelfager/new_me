@@ -52,6 +52,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     const ring = host.querySelector<HTMLElement>('#ring')!;
     const role = host.querySelector<HTMLElement>('#role')!;
     const pw = host.querySelector<HTMLElement>('#pwrap')!;
+    const person = host.querySelector<HTMLElement>('.person');
     const glow = host.querySelector<HTMLElement>('#glow')!;
 
     let live = false;
@@ -133,7 +134,8 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       gsap.quickTo(elTarget, p, { duration: d, ease: 'power3' }) as (v: number) => void;
     const qd = !CO && dot ? [qk(dot, 'x', 0.1), qk(dot, 'y', 0.1)] : [(_v: number) => {}, (_v: number) => {}];
     const qr = !CO && ring ? [qk(ring, 'x', 0.5), qk(ring, 'y', 0.5)] : [(_v: number) => {}, (_v: number) => {}];
-    const qp = !CO && pw ? [qk(pw, 'x', 1.2), qk(pw, 'y', 1.2)] : [(_v: number) => {}, (_v: number) => {}];
+    // Mouse parallax targets .person image directly, leaving #pwrap dedicated to scroll curtain
+    const qp = !CO && person ? [qk(person, 'x', 1.2), qk(person, 'y', 1.2)] : [(_v: number) => {}, (_v: number) => {}];
     const qg = !CO && glow ? [qk(glow, 'x', 1.8), qk(glow, 'y', 1.8)] : [(_v: number) => {}, (_v: number) => {}];
     const qn = !CO ? Array.from(host.querySelectorAll<HTMLElement>('.name')).map(n => qk(n, 'x', 1.4)) : [];
 
@@ -393,17 +395,19 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     const isNarrow = matchMedia('(max-width: 768px)').matches;
     const isMobile = isCoarse || isNarrow;
 
-    // Compositor-driven sticky curtain: Work slides over Hero.
-    // Exit trigger drives only cheap translateY on portrait and opacity on hero-dim.
+    // scrub: true = reads real window.scrollY every RAF frame, zero lag.
+    // This keeps GSAP animations perfectly in sync with position:sticky.
+    // Any numeric scrub (0.2, 0.35 etc.) creates lag → visible glitch at seam.
     const exitTl = gsap.timeline({
       defaults: { ease: 'none' },
       scrollTrigger: {
         trigger: heroTrack,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: true,
+        scrub: true,            // ← MUST be true (not 0.2/0.35), zero lag
         invalidateOnRefresh: true,
         onLeave: () => {
+          // Hide hero completely once Work has fully covered it — saves GPU
           hero.style.visibility = 'hidden';
           hero.classList.add('hero-paused');
           this.mqAnim?.pause();
@@ -418,18 +422,21 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       },
     });
 
+    // Only opacity and transform — both compositor properties, zero paint cost.
     if (heroDim) {
-      exitTl.to(heroDim, { opacity: 0.65, ease: 'none' }, 0);
+      exitTl.to(heroDim, { opacity: 0.7, ease: 'none' }, 0);
     }
 
     if (pwrap) {
-      exitTl.to(pwrap, { y: '16svh', ease: 'none' }, 0);
+      // translateY only — stays on compositor layer
+      exitTl.to(pwrap, { y: '12svh', ease: 'none' }, 0);
     }
 
+    // Desktop only: letter lift (adds GPU layers, skip on mobile)
     if (!isMobile) {
       const chars = hero.querySelectorAll<HTMLElement>('.name:not(.ol) .ci');
       if (chars.length) {
-        exitTl.to(chars, { yPercent: -100, ease: 'power2.in', stagger: { each: 0.02 } }, 0);
+        exitTl.to(chars, { yPercent: -100, ease: 'power2.in', stagger: { each: 0.018 } }, 0);
       }
     }
 

@@ -163,7 +163,7 @@ export class WorkComponent implements AfterViewInit, OnDestroy {
         const tags = $$('.tags span', ch);
         const fadeItems = descEl ? [descEl, ...tags] : tags;
         if (fadeItems.length) tl.from(fadeItems, { y: 30, autoAlpha: 0, duration: 0.8, stagger: 0.07 }, '<.3');
-        if (card) tl.from(card, { y: 120, rotation: 6, scale: 0.92, autoAlpha: 0, duration: 1.3 }, '<-.5');
+        if (card) tl.from(card, { y: 80, scale: 0.95, autoAlpha: 0, duration: 1 }, '<-.5');
 
         if (amt) {
           const targetVal = Number(amt.dataset['to'] || 0);
@@ -196,7 +196,7 @@ export class WorkComponent implements AfterViewInit, OnDestroy {
         }
       });
 
-      // Desktop-only scrubbed effects: Card rotateX/Y, vis parallax, big parallax, and velocity skew
+      // Desktop-only scrubbed effects: Card rotateX/Y, vis parallax, and big parallax
       // Limited to pointer: fine and min-width: 801px
       mm.add('(min-width: 801px) and (pointer: fine)', () => {
         // Merge the 3 scrubbed ScrollTriggers per chapter into ONE timeline with ONE trigger
@@ -210,22 +210,8 @@ export class WorkComponent implements AfterViewInit, OnDestroy {
             },
           });
           if (vis) scrubTl.fromTo(vis, { yPercent: 8 + i * 4 }, { yPercent: -(8 + i * 4), ease: 'none' }, 0);
-          if (card) scrubTl.fromTo(card, { rotateY: -9, rotateX: 4 }, { rotateY: 9, rotateX: -4, ease: 'none' }, 0);
+          if (card) scrubTl.fromTo(card, { rotateY: -8, rotateX: 3 }, { rotateY: 8, rotateX: -3, ease: 'none' }, 0);
           if (big) scrubTl.fromTo(big, { xPercent: -10 }, { xPercent: 10, ease: 'none' }, 0);
-        });
-
-        // Velocity skewY on desktop only
-        const clamp = gsap.utils.clamp(-7, 7);
-        const skews = cards.map(c => gsap.quickTo(c, 'skewY', { duration: 0.5, ease: 'power3' }));
-        const setSkew = (v: number) => skews.forEach(s => s(v));
-        const stSkew = ScrollTrigger.create({
-          onUpdate: self => setSkew(clamp(self.getVelocity() / -300)),
-        });
-        const resetSkew = () => setSkew(0);
-        ScrollTrigger.addEventListener('scrollEnd', resetSkew);
-        this.cleanups.push(() => {
-          stSkew.kill();
-          ScrollTrigger.removeEventListener('scrollEnd', resetSkew);
         });
       });
 
