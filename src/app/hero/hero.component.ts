@@ -313,6 +313,22 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       if (bootEl) bootEl.remove();
       this._initExitTrigger(host);
     } else {
+      // Lock scroll while boot loader is active so user cannot scroll prematurely
+      const unlockScroll = () => {
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+      };
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      window.scrollTo(0, 0);
+      this.cleanups.push(unlockScroll);
+
+      if (bootEl) {
+        const preventScroll = (e: Event) => e.preventDefault();
+        bootEl.addEventListener('touchmove', preventScroll, { passive: false });
+        bootEl.addEventListener('wheel', preventScroll, { passive: false });
+      }
+
       gsap.set(chars, { yPercent: 125, rotation: 8, transformOrigin: '0% 100%' });
       gsap.set(ui, { autoAlpha: 0, y: 24 });
       gsap.set('.strip', { yPercent: 100 });
@@ -359,7 +375,10 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
           }
         }, '>-.4')
         .eventCallback('onComplete', () => {
+          unlockScroll();
+          if (bootEl) bootEl.remove();
           this._initExitTrigger(host);
+          ScrollTrigger.refresh();
         });
     }
   }
