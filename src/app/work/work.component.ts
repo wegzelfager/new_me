@@ -72,21 +72,21 @@ export class WorkComponent implements AfterViewInit, OnDestroy {
     this.ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
 
-      // Statement word reveal: delayed so it starts after Work top passes ~20% of viewport
+      // Statement word reveal: smooth opacity transition as soon as section appears
       const statementEl = $('#statement');
       if (statementEl) {
         gsap.fromTo(
           split(statementEl),
-          { opacity: 0.14 },
+          { opacity: 0.25 },
           {
             opacity: 1,
             ease: 'none',
-            stagger: 0.12,
+            stagger: 0.08,
             scrollTrigger: {
               trigger: statementEl,
-              start: 'top 70%',
-              end: 'bottom 40%',
-              scrub: 0.4,
+              start: 'top 85%',
+              end: 'bottom 50%',
+              scrub: 0.3,
             },
           },
         );
@@ -143,12 +143,14 @@ export class WorkComponent implements AfterViewInit, OnDestroy {
           },
         });
 
-        // Entrance timeline for all devices
+        const isMobile = matchMedia('(max-width: 800px)').matches || matchMedia('(pointer: coarse)').matches;
+
+        // Entrance timeline for all devices — prompt entrance on mobile (top 85%) so content never lags
         const tl = gsap.timeline({
           defaults: { ease: 'expo.out' },
           scrollTrigger: {
             trigger: ch,
-            start: 'top 65%',
+            start: isMobile ? 'top 85%' : 'top 75%',
             toggleActions: 'play none none reverse',
             onEnter: () => node?.classList.add('on'),
             onLeaveBack: () => node?.classList.remove('on'),
