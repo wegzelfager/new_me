@@ -131,9 +131,11 @@ export class MergeTransitionComponent implements AfterViewInit, OnDestroy {
           cv = V * 0.50;
           svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
 
-          const spread = Math.min(V * 0.24, 280);
-          const vA = cv - spread;
-          const vB = cv + spread;
+          // On narrow screens clamp spread so both branches stay on-screen
+          const maxSpread = (cv - 20); // never push branch past left/right edge
+          const spread = Math.min(V * 0.22, 200, maxSpread);
+          const vA = Math.max(20, cv - spread);
+          const vB = Math.min(V - 20, cv + spread);
 
           const br = (v: number) =>
             'M' + S(0, v) + 'L' + S(U * 0.18, v) + 'C' + S(U * 0.34, v) + ' ' + S(U * 0.32, cv) + ' ' + S(cu, cv);

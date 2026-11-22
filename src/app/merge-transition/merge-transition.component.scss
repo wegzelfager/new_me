@@ -72,6 +72,15 @@
   stroke-dashoffset: 1;
 }
 
+@media (pointer: coarse) {
+  .pA, .pB, .pM {
+    filter: none; // drop-shadow on SVG paths is expensive on mobile GPU
+  }
+  .tr::before {
+    display: none; // dot-grid background paint cost
+  }
+}
+
 .tk {
   position: absolute;
   left: 0;
