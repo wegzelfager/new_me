@@ -1,11 +1,6 @@
 :host {
   display: block;
-  position: sticky;
-  top: 0;
   height: 100svh;
-  z-index: 0;
-  isolation: isolate;
-  overflow: clip;
   font-family: 'Inter Tight', system-ui, sans-serif;
 
   --bg: #06070d;
@@ -16,6 +11,20 @@
   --on: #0a0b14;
   --glow: rgba(35, 82, 255, 0.6);
   color-scheme: dark;
+
+  @media (min-width: 801px) {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    isolation: isolate;
+    overflow: clip;
+  }
+
+  @media (max-width: 800px) {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
 }
 
 #heroRoot {

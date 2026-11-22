@@ -2,13 +2,20 @@
   display: block;
   position: relative;
   z-index: 10;
-  margin-top: -100svh;
   background: var(--bg);
   --bg: #0A0C2B;
   --ink: #E9EBFF;
   --mut: #A5AAF0;
   --acc: #FFD23F;
   --on: #0A0C2B;
+
+  @media (min-width: 801px) {
+    margin-top: -100svh;
+  }
+
+  @media (max-width: 800px) {
+    margin-top: 0;
+  }
 }
 
 .workhost {
