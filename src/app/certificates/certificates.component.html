@@ -57,23 +57,22 @@
                 [attr.data-index]="i"
                 [attr.data-id]="s.id"
               >
-                <!-- Sheet Header Row -->
+                <!-- Sheet Header Row: tag + seal (inline on mobile, date beside tag) -->
                 <div class="cert-sheet-top">
                   <span class="cert-sheet-tag">{{ s.tag }}</span>
                   <span class="cert-sheet-date">{{ s.date }}</span>
-                </div>
-
-                <!-- Circular Rotating Seal (First 3 sheets only) -->
-                <div class="cert-seal-wrap" *ngIf="s.type === 'sheet'" aria-hidden="true">
-                  <svg class="cert-seal" viewBox="0 0 100 100">
-                    <g class="cert-seal-spin">
-                      <text font-family="'JetBrains Mono', monospace" font-size="8.5" font-weight="700" letter-spacing="2.6" fill="currentColor">
-                        <textPath href="#cert-seal-path" startOffset="0%">VERIFIED ✦ CERTIFIED ✦ </textPath>
-                      </text>
-                    </g>
-                    <circle cx="50" cy="50" r="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-dasharray="3 3"/>
-                    <path class="cert-seal-check" d="M42 50.5 L47.5 56 L58 44.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
+                  <!-- Seal moved inside top row on mobile via CSS position:static -->
+                  <div class="cert-seal-wrap" *ngIf="s.type === 'sheet'" aria-hidden="true">
+                    <svg class="cert-seal" viewBox="0 0 100 100">
+                      <g class="cert-seal-spin">
+                        <text font-family="'JetBrains Mono', monospace" font-size="8.5" font-weight="700" letter-spacing="2.6" fill="currentColor">
+                          <textPath href="#cert-seal-path" startOffset="0%">VERIFIED ✦ CERTIFIED ✦ </textPath>
+                        </text>
+                      </g>
+                      <circle cx="50" cy="50" r="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-dasharray="3 3"/>
+                      <path class="cert-seal-check" d="M42 50.5 L47.5 56 L58 44.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
                 </div>
 
                 <!-- Sheet Content -->
@@ -100,6 +99,14 @@
                   </div>
                 </div>
               </article>
+            </div>
+
+            <!-- Mobile-only next indicator (swipe hint + dot counter) -->
+            <div class="cert-mob-footer" aria-hidden="true">
+              <div class="cert-mob-dots">
+                <span *ngFor="let s of sheets; let i = index" [class.on]="i === activeIndex"></span>
+              </div>
+              <span class="cert-mob-hint">← swipe →</span>
             </div>
           </div>
         </div>
