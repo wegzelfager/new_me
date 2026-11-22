@@ -1,25 +1,29 @@
 import { Injectable, Inject, PLATFORM_ID, NgZone, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 /**
  * SmoothScrollService
  * -------------------
- * Uses pure native scroll (compositor-driven, zero JS animation loop).
- * On desktop: leverages ScrollTrigger.normalizeScroll for consistent
- * wheel delta normalisation without hijacking the scroll position.
- * On mobile: pure native momentum — nothing to do.
+ * Uses Lenis for smooth wheel interpolation on desktop.
+ * Mobile (pointer:coarse) keeps 100% native momentum — syncTouch: false.
  *
- * We deliberately dropped Lenis because its RAF-based interpolation
- * runs on the main thread and causes compositor/main-thread desync
- * ("tearing") with GSAP ScrollTrigger scrub timelines.
+ * WHY Lenis is now safe (was not safe before):
+ *   BEFORE: Hero used GSAP pin:true which repositioned the hero element
+ *           from JS every frame. Lenis also runs from JS RAF. Two JS loops
+ *           fighting for scroll position → compositor/main-thread desync → tearing.
+ *   NOW:    Hero is CSS position:sticky — the compositor handles it without
+ *           any JS. Lenis only controls the native scrollTop and fires
+ *           ScrollTrigger.update. No conflict.
  */
 @Injectable({
   providedIn: 'root',
 })
 export class SmoothScrollService implements OnDestroy {
-  private normalizer: ReturnType<typeof ScrollTrigger.normalizeScroll> | null = null;
+  private lenis: Lenis | null = null;
+  private rafId: ((time: number) => void) | null = null;
   private isLocked = false;
 
   constructor(
@@ -36,69 +40,82 @@ export class SmoothScrollService implements OnDestroy {
       history.scrollRestoration = 'manual';
     }
 
-    ScrollTrigger.config({
-      ignoreMobileResize: true,
-      // Prevent blurry text on Firefox during scrub
-      limitCallbacks: true,
-    });
+    ScrollTrigger.config({ ignoreMobileResize: true });
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
 
-    if (prefersReducedMotion || isTouch) {
-      // Mobile / reduced-motion: pure native scroll, nothing needed.
-      return;
-    }
+    // Mobile: 100% native scroll. Lenis only on desktop.
+    if (RM || isTouch) return;
 
     this.ngZone.runOutsideAngular(() => {
-      // normalizeScroll smooths out inconsistent wheel delta across browsers
-      // and OS momentum without hijacking scroll position from the compositor.
-      this.normalizer = ScrollTrigger.normalizeScroll({
-        allowNestedScroll: true,
-        lockAxis: false,
-        // Let touch devices keep native momentum
-        type: 'wheel,touch,pointer',
+      this.lenis = new Lenis({
+        // No JS animation loop override — autoRaf:false means WE drive it
+        // via gsap.ticker so it stays in sync with GSAP ScrollTrigger
+        autoRaf: false,
+        // lerp: how "springy" the smooth scroll feels (0 = instant, 1 = never arrives)
+        // 0.08 = buttery smooth, not laggy
+        lerp: 0.08,
+        smoothWheel: true,
+        // CRITICAL: syncTouch:false keeps mobile NATIVE even if Lenis is active
+        syncTouch: false,
+        // Wheel multiplier — 1 = same as native, slightly lower = less overshoot
+        wheelMultiplier: 0.9,
       });
+
+      // Wire Lenis scroll events into ScrollTrigger so scrub timelines stay in sync
+      this.lenis.on('scroll', ScrollTrigger.update);
+
+      // Drive Lenis from GSAP ticker (same RAF loop as ScrollTrigger)
+      this.rafId = (time: number) => this.lenis?.raf(time * 1000);
+      gsap.ticker.add(this.rafId);
+
+      // Prevent GSAP ticker lag-compensation from causing jumps
+      gsap.ticker.lagSmoothing(0);
     });
   }
 
-  /**
-   * Stop scrolling (during boot loader).
-   * Native: sets overflow hidden since we have no Lenis.
-   */
   public stop(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     this.isLocked = true;
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
+    if (this.lenis) {
+      this.lenis.stop();
+    } else {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    }
   }
 
-  /**
-   * Resume scrolling after boot loader finishes.
-   */
   public start(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     this.isLocked = false;
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
+    if (this.lenis) {
+      this.lenis.start();
+    } else {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    }
   }
 
-  /**
-   * Scroll to a target element or y-offset.
-   */
   public scrollTo(target: HTMLElement | number, behavior: ScrollBehavior = 'smooth'): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    if (typeof target === 'number') {
+    if (this.lenis) {
+      this.lenis.scrollTo(target as any, { lerp: 0.08 });
+    } else if (typeof target === 'number') {
       window.scrollTo({ top: target, behavior });
     } else {
-      target.scrollIntoView({ behavior });
+      (target as HTMLElement).scrollIntoView({ behavior });
     }
   }
 
   ngOnDestroy(): void {
-    if (this.normalizer) {
-      this.normalizer.kill();
-      this.normalizer = null;
+    if (this.rafId) {
+      gsap.ticker.remove(this.rafId);
+      this.rafId = null;
+    }
+    if (this.lenis) {
+      this.lenis.destroy();
+      this.lenis = null;
     }
     if (this.isLocked && isPlatformBrowser(this.platformId)) {
       document.documentElement.style.overflow = '';
