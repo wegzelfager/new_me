@@ -146,29 +146,51 @@ export class StackComponent implements AfterViewInit, OnDestroy {
     const E = ['expo.out', 'back.out(2.2)', 'elastic.out(1,.4)'];
     const EN = ['expo.out', 'back.out', 'elastic.out'];
     const EC = ['#ffd23f', 'var(--ink)', 'var(--mut)'];
-    const pt = (easeName: string, t: number): [number, number] => [
-      20 + t * 360,
-      250 - (gsap.parseEase(easeName)(t) as number) * 190,
+    const easeFns = E.map(name => gsap.parseEase(name));
+    const pt = (index: number, t: number): [number, number] => [
+      20 + Math.max(0, Math.min(1, t)) * 360,
+      250 - (easeFns[index](Math.max(0, Math.min(1, t))) as number) * 190,
     ];
 
     const s0 = q<HTMLElement>('#s0');
     if (s0) {
-      const paths = E.map((ease, i) => {
+      // 1. Ghost reference trajectories (dashed background lines)
+      const ghostPaths = E.map((_, i) => {
         let d = '';
         for (let k = 0; k <= 70; k++) {
-          const p = pt(ease, k / 70);
+          const p = pt(i, k / 70);
           d += (k ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1);
         }
         return (
-          '<path pathLength="1" d="' +
+          '<path d="' +
           d +
           '" style="fill:none;stroke:' +
           EC[i] +
-          ';stroke-width:3;stroke-linecap:round;stroke-dasharray:1"/><circle r="6" cx="20" cy="250" style="fill:' +
+          ';stroke-width:1.5;stroke-dasharray:3 4;opacity:0.25;"/>'
+        );
+      }).join('');
+
+      // 2. Active animated curves, dots, and labels
+      const activePaths = E.map((_, i) => {
+        let d = '';
+        for (let k = 0; k <= 70; k++) {
+          const p = pt(i, k / 70);
+          d += (k ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1);
+        }
+        return (
+          '<path class="ease-path" data-idx="' +
+          i +
+          '" d="' +
+          d +
+          '" style="fill:none;stroke:' +
           EC[i] +
-          '"/><text x="380" y="' +
-          (24 + i * 16) +
-          '" text-anchor="end" font-size="11" style="fill:' +
+          ';stroke-width:3.5;stroke-linecap:round;"/><circle class="ease-dot" data-idx="' +
+          i +
+          '" r="6.5" cx="20" cy="250" style="fill:' +
+          EC[i] +
+          ';stroke:var(--bg);stroke-width:1.5;"/><text x="380" y="' +
+          (24 + i * 18) +
+          '" text-anchor="end" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600" style="fill:' +
           EC[i] +
           '">' +
           EN[i] +
@@ -177,29 +199,48 @@ export class StackComponent implements AfterViewInit, OnDestroy {
       }).join('');
 
       s0.innerHTML =
-        '<svg viewBox="0 0 400 280"><path d="M20 250H380M20 250V20" style="stroke:var(--hair);fill:none"/>' +
-        paths +
+        '<svg viewBox="0 0 400 280"><path d="M20 250H380M20 250V20" style="stroke:var(--hair);stroke-width:1.5;fill:none"/>' +
+        ghostPaths +
+        activePaths +
         '</svg><p class="cap">same motion, three personalities</p>';
     }
 
     // Per-scene scrubbed animation builders
     const B: Array<(e: HTMLElement) => gsap.core.Timeline> = [
       (e: HTMLElement) => {
-        const P = Array.from(e.querySelectorAll<SVGPathElement>('path[pathLength]'));
-        const D = Array.from(e.querySelectorAll<SVGCircleElement>('circle'));
+        const P = Array.from(e.querySelectorAll<SVGPathElement>('.ease-path'));
+        const D = Array.from(e.querySelectorAll<SVGCircleElement>('.ease-dot'));
+
+        // Measure actual pixel length of each path to animate dashoffset cleanly
+        const lengths = P.map(p => {
+          const len = p.getTotalLength() || 420;
+          p.style.strokeDasharray = `${len.toFixed(1)}`;
+          p.style.strokeDashoffset = `${len.toFixed(1)}`;
+          return len;
+        });
+
+        // Initialize dot positions at t = 0
+        D.forEach((d, i) => {
+          const p0 = pt(i, 0);
+          d.setAttribute('cx', p0[0].toFixed(1));
+          d.setAttribute('cy', p0[1].toFixed(1));
+        });
+
         const o = { t: 0 };
         return gsap
           .timeline({ defaults: { ease: 'none' } })
-          .fromTo(P, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1 }, 0)
-          .fromTo(
+          .to(
             o,
-            { t: 0 },
             {
               t: 1,
               duration: 1,
               onUpdate: () => {
+                const progress = o.t;
+                P.forEach((p, i) => {
+                  p.style.strokeDashoffset = (lengths[i] * (1 - progress)).toFixed(1);
+                });
                 D.forEach((d, i) => {
-                  const p = pt(E[i], o.t);
+                  const p = pt(i, progress);
                   d.setAttribute('cx', p[0].toFixed(1));
                   d.setAttribute('cy', p[1].toFixed(1));
                 });
@@ -331,23 +372,29 @@ export class StackComponent implements AfterViewInit, OnDestroy {
         gsap.set(tx.slice(1), { autoAlpha: 0 });
         gsap.set(sc.slice(1), { autoAlpha: 0 });
 
-        // 4. Master Timeline
+        // 4. Master Timeline — smooth touch scroll, no freezing/snap-trapping
+        const isTouch = matchMedia('(pointer: coarse)').matches;
+        const scrollTriggerConfig: ScrollTrigger.Vars = {
+          trigger: reelEl,
+          start: 'top top',
+          end: () => '+=' + window.innerHeight * N * (isTouch ? 0.45 : 0.55),
+          pin: true,
+          scrub: isTouch ? 0.35 : 0.6,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        };
+        if (!isTouch) {
+          scrollTriggerConfig.snap = {
+            snapTo: 'labels',
+            duration: { min: 0.2, max: 0.5 },
+            delay: 0.15,
+            ease: 'power1.out',
+          };
+        }
+
         const tl = gsap.timeline({
           defaults: { ease: 'none' },
-          scrollTrigger: {
-            trigger: reelEl,
-            start: 'top top',
-            end: () => '+=' + window.innerHeight * N * 0.55,
-            pin: true,
-            scrub: 0.8,
-            invalidateOnRefresh: true,
-            snap: {
-              snapTo: 'labels',
-              duration: { min: 0.25, max: 0.7 },
-              delay: 0.08,
-              ease: 'power2.inOut',
-            },
-          },
+          scrollTrigger: scrollTriggerConfig,
         });
 
         tl.addLabel('p0', 0);
