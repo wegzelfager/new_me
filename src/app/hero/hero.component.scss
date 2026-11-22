@@ -105,9 +105,9 @@
   border: 1.5px solid #fff;
 }
 
-@media (pointer: coarse) {
+@media (pointer: coarse), (max-width: 900px) {
   .cur {
-    display: none;
+    display: none !important;
   }
 }
 
@@ -486,9 +486,6 @@
   .stack {
     display: none;
   }
-  .info {
-    width: min(300px, 80vw);
-  }
   .tag {
     display: none;
   }
@@ -496,8 +493,27 @@
 
 @media (max-width: 768px) {
   .hero {
-    --fs: 17vw;
-    --ph: min(66vh, calc(100svh - 24vh));
+    --fs: clamp(2.7rem, 13.5vw, 4.6rem);
+    --px: 16px;
+    --sh: 44px;
+    --ph: clamp(500px, 74svh, 640px);
+    --pw: calc(var(--ph) * 0.547);
+  }
+  .top {
+    padding: calc(12px + env(safe-area-inset-top, 0px)) var(--px) 0;
+  }
+  .logo {
+    font-size: 1.05rem;
+  }
+  .meta {
+    gap: 0.6rem;
+  }
+  #clock {
+    font-size: 0.68rem;
+  }
+  .tg {
+    padding: 0.45em 0.85em;
+    font-size: 0.68rem;
   }
   .cols {
     background-size: 50% 100%;
@@ -506,18 +522,38 @@
     display: none;
   }
   .name {
-    top: calc(11vh + env(safe-area-inset-top, 0px));
+    top: calc(9.5vh + env(safe-area-inset-top, 0px));
+    line-height: 0.86;
+    letter-spacing: -0.055em;
+  }
+  .info {
+    width: calc(100% - var(--px) * 2);
+    max-width: 380px;
+    left: var(--px);
+    bottom: calc(var(--sh) + 14px);
+  }
+  .lab {
+    font-size: 0.68rem;
+    margin-bottom: 0.4rem;
   }
   .role {
-    font-size: 1.25rem;
+    font-size: clamp(1.15rem, 5vw, 1.45rem);
+    line-height: 1.2;
+    min-height: 2.2em;
   }
   .pitch {
-    font-size: 0.85rem;
-    max-width: 26ch;
+    font-size: 0.84rem;
+    line-height: 1.45;
+    max-width: 32ch;
+    margin-top: 0.35rem;
+  }
+  .cta {
+    margin-top: 0.9rem;
+    gap: 0.6rem;
   }
   .btn {
-    padding: 0.7em 1.2em;
-    font-size: 0.88rem;
+    padding: 0.65em 1.2em;
+    font-size: 0.84rem;
   }
   .hero::after {
     content: "";
@@ -528,11 +564,21 @@
     height: 52%;
     z-index: 5;
     pointer-events: none;
-    background: linear-gradient(transparent, var(--bg) 82%);
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      color-mix(in srgb, var(--bg) 65%, transparent) 35%,
+      color-mix(in srgb, var(--bg) 95%, transparent) 65%,
+      var(--bg) 100%
+    );
   }
 }
 
 @media (max-width: 380px) {
+  .hero {
+    --fs: clamp(2.3rem, 12.2vw, 3.8rem);
+    --ph: clamp(440px, 72svh, 540px);
+  }
   #clock {
     display: none;
   }
