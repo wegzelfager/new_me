@@ -216,13 +216,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       });
     }
 
-    // Theme toggle & clock
-    const tg = host.querySelector<HTMLButtonElement>('#tg')!;
-    if (tg) {
-      tg.onclick = () => {
-        root.dataset['theme'] = root.dataset['theme'] === 'light' ? 'dark' : 'light';
-      };
-    }
+    // Clock
     const fm = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Cairo' });
     const ck = host.querySelector<HTMLElement>('#clock')!;
     const tick = () => {
@@ -374,6 +368,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     const hero = host.querySelector<HTMLElement>('.hero')!;
     if (!hero) return;
     const q = (x: string) => hero.querySelectorAll<HTMLElement>(x);
+    const isTouch = matchMedia('(pointer: coarse)').matches;
     const exitTl = gsap.timeline({
       defaults: { ease: 'none' },
       scrollTrigger: {
@@ -382,15 +377,16 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
         end: '+=100%',
         pin: true,
         pinSpacing: false,
-        scrub: 0.5,
+        scrub: isTouch ? 0.2 : 0.35,
         refreshPriority: 1,
         anticipatePin: 1,
+        fastScrollEnd: true,
         invalidateOnRefresh: true,
       },
     })
       .to(q('.ci'), { yPercent: -120, duration: 0.5, ease: 'power2.in', stagger: { each: 0.025 } }, 0)
       .to(q('.info, .stack, .tag, .badge'), { y: -40, autoAlpha: 0, duration: 0.35 }, 0)
-      .to(q('.pwrap'), { yPercent: 28, duration: 0.9, ease: 'power1.in' }, 0)
+      .to(q('.pwrap'), { yPercent: 25, duration: 1, ease: 'none' }, 0)
       .to(hero, { scale: 0.9, autoAlpha: 0.3, duration: 1 }, 0);
 
     this.cleanups.push(() => {

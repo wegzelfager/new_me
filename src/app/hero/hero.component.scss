@@ -15,17 +15,6 @@
   color-scheme: dark;
 }
 
-:host-context([data-theme="light"]),
-:host-context(:root[data-theme="light"]) {
-  --bg: #e9e5dc;
-  --ink: #0a0b14;
-  --mut: rgba(10, 11, 20, 0.55);
-  --ln: rgba(10, 11, 20, 0.1);
-  --acc: #1b4dff;
-  --on: #fff;
-  --glow: rgba(27, 77, 255, 0.35);
-  color-scheme: light;
-}
 
 #heroRoot {
   display: block;
@@ -327,6 +316,9 @@
   pointer-events: none;
   transform-origin: 50% 100%;
   will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .person {
@@ -335,7 +327,11 @@
   height: 100%;
   object-fit: contain;
   user-select: none;
-  filter: drop-shadow(0 0 1.5px rgba(150, 180, 255, 0.85)) drop-shadow(0 30px 50px rgba(0, 0, 10, 0.5));
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  filter: drop-shadow(0 0 1.5px rgba(150, 180, 255, 0.85)) drop-shadow(0 25px 40px rgba(0, 0, 10, 0.45));
 }
 
 .info {

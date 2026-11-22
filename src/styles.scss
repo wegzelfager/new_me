@@ -1,11 +1,11 @@
-/* Global tokens & theme */
+/* Global tokens & theme - Unified Dark Theme */
 :root {
-  --bg: #ECEBFF;
-  --ink: #1B22C9;
-  --mut: #4A4F9E;
-  --acc: #FFC933;
+  --bg: #0A0C2B;
+  --ink: #E9EBFF;
+  --mut: #A5AAF0;
+  --acc: #FFD23F;
   --on: #0A0C2B;
-  color-scheme: light;
+  color-scheme: dark;
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -22,24 +22,6 @@
     --pw: calc(var(--ph) * .547);
     --px: clamp(14px, 4vw, 24px);
   }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0A0C2B;
-    --ink: #E9EBFF;
-    --mut: #A5AAF0;
-    --acc: #FFD23F;
-    color-scheme: dark;
-  }
-}
-
-:root[data-theme="dark"] {
-  --bg: #0A0C2B;
-  --ink: #E9EBFF;
-  --mut: #A5AAF0;
-  --acc: #FFD23F;
-  color-scheme: dark;
 }
 
 html {
