@@ -207,8 +207,8 @@ export class WorkComponent implements AfterViewInit, OnDestroy {
 
         const headEl = $('.head');
         if (headEl) {
-          gsap.from($$('.head > *'), {
-            y: 40,
+          gsap.from($$('.head .node, .head-title, .merge'), {
+            y: 35,
             autoAlpha: 0,
             stagger: 0.12,
             duration: 0.9,
