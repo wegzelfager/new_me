@@ -26,7 +26,6 @@
 
 html {
   scroll-padding-top: env(safe-area-inset-top, 0px);
-  scroll-behavior: smooth;
 }
 
 html,
@@ -50,7 +49,7 @@ body {
   background: var(--bg);
   color: var(--ink);
   font: 400 1rem/1.5 'Bricolage Grotesque', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 @media (pointer: fine) {
@@ -66,4 +65,26 @@ a:focus-visible,
 button:focus-visible {
   outline: 3px solid var(--acc);
   outline-offset: 4px;
+}
+
+/* Lenis smooth scrolling rules */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }

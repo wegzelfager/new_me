@@ -1,10 +1,11 @@
 :host {
   display: block;
-  position: relative;
-  z-index: 1;
-  isolation: isolate;
-  height: 100vh;
+  position: sticky;
+  top: 0;
   height: 100svh;
+  z-index: 0;
+  isolation: isolate;
+  overflow: clip;
   font-family: 'Inter Tight', system-ui, sans-serif;
 
   --bg: #06070d;
@@ -17,10 +18,8 @@
   color-scheme: dark;
 }
 
-
 #heroRoot {
   display: block;
-  height: 100vh;
   height: 100svh;
   position: relative;
 }
@@ -33,14 +32,23 @@
 
 .hero {
   --px: clamp(16px, 3vw, 48px);
-  --sh: calc(clamp(44px, 6.5vh, 60px) + env(safe-area-inset-bottom, 0px));
-  --fs: min(16.2vw, 29vh);
-  --ph: min(92vh, calc(100svh - 6vh));
+  --sh: calc(clamp(44px, 6.5svh, 60px) + env(safe-area-inset-bottom, 0px));
+  --fs: min(16.2vw, 29svh);
+  --ph: min(92svh, calc(100svh - 6svh));
   --pw: calc(var(--ph) * 0.547);
   position: relative;
-  height: 100vh;
   height: 100svh;
   overflow: hidden;
+}
+
+.hero-dim {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  opacity: 0;
+  z-index: 8;
+  pointer-events: none;
+  will-change: opacity;
 }
 
 .cols {
@@ -53,11 +61,11 @@
 .glow {
   position: absolute;
   z-index: 1;
-  width: 110vh;
-  height: 110vh;
+  width: 110svh;
+  height: 110svh;
   left: 50%;
-  margin-left: -55vh;
-  bottom: -38vh;
+  margin-left: -55svh;
+  bottom: -38svh;
   border-radius: 50%;
   background: radial-gradient(circle, var(--glow), transparent 66%);
   filter: blur(20px);
@@ -65,25 +73,21 @@
 }
 
 .grain {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 90;
+  z-index: 1;
   pointer-events: none;
-  opacity: 0.1;
-  mix-blend-mode: overlay;
+  opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-@media (pointer: coarse) {
-  // Disable expensive compositing effects on mobile
+@media (pointer: coarse), (max-width: 768px) {
   .grain {
-    display: none;
+    display: none !important;
   }
 
-  // Remove blur on glow — very costly on mobile GPUs
   .glow {
     filter: none;
-    // CSS breathing animation replaces JS gsap.to repeat:-1
     animation: glowBreathe 4.5s ease-in-out infinite alternate;
   }
 
@@ -92,7 +96,18 @@
     to   { transform: scale(1.08); }
   }
 
-  // CSS marquee replaces GSAP on mobile
+  .strip {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--bg) !important;
+  }
+
+  .tg {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: color-mix(in srgb, var(--ink) 8%, var(--bg)) !important;
+  }
+
   .track.css-marquee {
     animation: cssMarquee 40s linear infinite;
   }
@@ -100,6 +115,20 @@
   @keyframes cssMarquee {
     from { transform: translateX(0); }
     to   { transform: translateX(-50%); }
+  }
+}
+
+.hero.hero-paused {
+  .ring {
+    animation-play-state: paused !important;
+  }
+
+  .glow {
+    animation-play-state: paused !important;
+  }
+
+  .track.css-marquee {
+    animation-play-state: paused !important;
   }
 }
 
@@ -155,7 +184,7 @@
 
 .top {
   position: absolute;
-  z-index: 8;
+  z-index: 9;
   left: 0;
   right: 0;
   top: 0;
@@ -196,7 +225,7 @@
   z-index: 2;
   left: 0;
   right: 0;
-  top: calc(10vh + env(safe-area-inset-top, 0px));
+  top: calc(10svh + env(safe-area-inset-top, 0px));
   margin: 0;
   padding: 0 calc(var(--px) - 0.04em);
   font-size: var(--fs);
@@ -232,7 +261,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: calc(var(--sh) + 20vh);
+  height: calc(var(--sh) + 20svh);
   pointer-events: none;
   background: linear-gradient(transparent, color-mix(in srgb, var(--bg) 70%, transparent) 55%, var(--bg));
 }
@@ -243,7 +272,7 @@
   width: clamp(96px, 9vw, 136px);
   aspect-ratio: 1;
   left: calc(50% + var(--pw) / 2 - 1vw);
-  bottom: calc(var(--sh) + 36vh);
+  bottom: calc(var(--sh) + 36svh);
   display: block;
 
   svg {
@@ -295,7 +324,7 @@
   position: absolute;
   z-index: 6;
   right: var(--px);
-  top: calc(10vh + var(--fs) * 0.14);
+  top: calc(10svh + var(--fs) * 0.14);
   margin: 0;
   max-width: 16ch;
   text-align: right;
@@ -340,7 +369,7 @@
   position: absolute;
   z-index: 6;
   left: var(--px);
-  bottom: calc(var(--sh) + 3.5vh);
+  bottom: calc(var(--sh) + 3.5svh);
   width: min(32ch, 30vw);
 }
 
@@ -432,7 +461,7 @@
   position: absolute;
   z-index: 6;
   right: var(--px);
-  bottom: calc(var(--sh) + 3.5vh);
+  bottom: calc(var(--sh) + 3.5svh);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -475,8 +504,6 @@
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
 }
 
 .track {
@@ -551,7 +578,7 @@
     display: none;
   }
   .name {
-    top: calc(9.5vh + env(safe-area-inset-top, 0px));
+    top: calc(9.5svh + env(safe-area-inset-top, 0px));
     line-height: 0.86;
     letter-spacing: -0.055em;
   }

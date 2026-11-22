@@ -11,9 +11,9 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SmoothScrollService } from '../services/smooth-scroll.service';
 
 gsap.registerPlugin(ScrollTrigger);
-ScrollTrigger.config({ ignoreMobileResize: true });
 
 @Component({
   selector: 'app-hero',
@@ -25,11 +25,14 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
 
   private ctx: ReturnType<typeof gsap.context> | null = null;
   private cleanups: Array<() => void> = [];
+  private mqAnim: gsap.core.Tween | null = null;
+  private glowAnim: gsap.core.Tween | null = null;
 
   constructor(
     private ngZone: NgZone,
     @Inject(PLATFORM_ID) private platformId: object,
     private el: ElementRef<HTMLElement>,
+    private smoothScroll: SmoothScrollService,
   ) {}
 
   ngAfterViewInit(): void {
@@ -38,7 +41,6 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   }
 
   private _init(): void {
-    const root = document.documentElement;
     const host = this.heroRoot?.nativeElement || this.el.nativeElement;
     this.ctx = gsap.context(() => {}, host);
 
@@ -58,11 +60,13 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
 
     // Duplicate name: solid copy behind portrait, outline copy in front
     const nm = host.querySelector<HTMLElement>('.name')!;
-    const ol = nm.cloneNode(true) as HTMLElement;
-    ol.classList.add('ol');
-    ol.removeAttribute('aria-label');
-    ol.setAttribute('aria-hidden', 'true');
-    hero.append(ol);
+    if (nm && hero) {
+      const ol = nm.cloneNode(true) as HTMLElement;
+      ol.classList.add('ol');
+      ol.removeAttribute('aria-label');
+      ol.setAttribute('aria-hidden', 'true');
+      hero.append(ol);
+    }
 
     // Letter splitting — on mobile (CO) skip quickTo instances to save JS overhead
     type LetterEntry = {
@@ -90,7 +94,6 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
           const q = (p: string) => gsap.quickTo(i, p, { duration: 0.7, ease: 'power3' }) as (v: number) => void;
           L.push({ o, i, qx: q('x'), qy: q('y'), qr: q('rotation'), cx: 0, cy: 0 });
         } else {
-          // Mobile: push span refs but no quickTo — only needed for intro animation (chars array)
           const noop = (_v: number) => {};
           L.push({ o, i, qx: noop, qy: noop, qr: noop, cx: 0, cy: 0 });
         }
@@ -123,24 +126,26 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     }
 
     // Cursor + parallax — only set up quickTo instances on desktop
-    gsap.set([dot, ring], { xPercent: -50, yPercent: -50 });
+    if (dot && ring) {
+      gsap.set([dot, ring], { xPercent: -50, yPercent: -50 });
+    }
     const qk = (elTarget: HTMLElement, p: string, d: number) =>
       gsap.quickTo(elTarget, p, { duration: d, ease: 'power3' }) as (v: number) => void;
-    const qd = !CO ? [qk(dot, 'x', 0.1), qk(dot, 'y', 0.1)] : [(_v: number) => {}, (_v: number) => {}];
-    const qr = !CO ? [qk(ring, 'x', 0.5), qk(ring, 'y', 0.5)] : [(_v: number) => {}, (_v: number) => {}];
-    const qp = !CO ? [qk(pw, 'x', 1.2), qk(pw, 'y', 1.2)] : [(_v: number) => {}, (_v: number) => {}];
-    const qg = !CO ? [qk(glow, 'x', 1.8), qk(glow, 'y', 1.8)] : [(_v: number) => {}, (_v: number) => {}];
+    const qd = !CO && dot ? [qk(dot, 'x', 0.1), qk(dot, 'y', 0.1)] : [(_v: number) => {}, (_v: number) => {}];
+    const qr = !CO && ring ? [qk(ring, 'x', 0.5), qk(ring, 'y', 0.5)] : [(_v: number) => {}, (_v: number) => {}];
+    const qp = !CO && pw ? [qk(pw, 'x', 1.2), qk(pw, 'y', 1.2)] : [(_v: number) => {}, (_v: number) => {}];
+    const qg = !CO && glow ? [qk(glow, 'x', 1.8), qk(glow, 'y', 1.8)] : [(_v: number) => {}, (_v: number) => {}];
     const qn = !CO ? Array.from(host.querySelectorAll<HTMLElement>('.name')).map(n => qk(n, 'x', 1.4)) : [];
 
     const onPointermove = (e: PointerEvent) => {
-      if (CO) return; // skip all pointer tracking on touch devices
+      if (CO) return;
       m.x = e.clientX;
       m.y = e.clientY;
       qd[0](m.x);
       qd[1](m.y);
       qr[0](m.x);
       qr[1](m.y);
-      if (!seen) {
+      if (!seen && dot && ring) {
         seen = true;
         gsap.to([dot, ring], { opacity: 1, duration: 0.3 });
       }
@@ -169,7 +174,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     this.cleanups.push(() => document.removeEventListener('pointerleave', onPointerleave));
 
     const onPointerover = (e: PointerEvent) => {
-      if (CO) return;
+      if (CO || !ring) return;
       const t = e.target as HTMLElement;
       gsap.to(ring, { scale: t.closest('a,button') ? 1.7 : 1, duration: 0.3, overwrite: 'auto' });
     };
@@ -218,7 +223,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
 
     // Clock
     const fm = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Cairo' });
-    const ck = host.querySelector<HTMLElement>('#clock')!;
+    const ck = host.querySelector<HTMLElement>('#clock');
     const tick = () => {
       if (ck) ck.textContent = 'Cairo ' + fm.format(new Date());
     };
@@ -237,21 +242,22 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       () => cancelAnimationFrame(raf)
     );
 
-    document.fonts.ready.then(measure);
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(measure);
+    }
 
     // Marquee — CSS animation on mobile, GSAP on desktop
     const items = ['Angular', 'Node.js', 'Express', 'MongoDB', 'MySQL', 'Stripe', 'Paymob', 'GSAP', 'Git automation', 'NASA Space Apps'];
     const set = items.map(t => '<span class="it">' + t + '</span>').join('');
-    const track = host.querySelector<HTMLElement>('#track')!;
+    const track = host.querySelector<HTMLElement>('#track');
     if (track) {
       track.innerHTML = set + set + set + set;
       if (!RM) {
         if (CO) {
-          // Mobile: pure CSS marquee — no JS RAF needed
           track.classList.add('css-marquee');
         } else {
-          const mqAnim = gsap.to(track, { xPercent: -50, duration: 45, ease: 'none', repeat: -1 });
-          this.cleanups.push(() => mqAnim.kill());
+          this.mqAnim = gsap.to(track, { xPercent: -50, duration: 45, ease: 'none', repeat: -1 });
+          this.cleanups.push(() => this.mqAnim?.kill());
         }
       }
     }
@@ -288,7 +294,6 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     let nextRoleCall: ReturnType<typeof gsap.delayedCall> | null = null;
     const nextRole = () => {
       ri = (ri + 1) % roles.length;
-      // Mobile: use simple typeTo (no per-frame scramble RAF), desktop: scramble effect
       if (CO) {
         typeTo(role, roles[ri], 0.7);
       } else {
@@ -303,25 +308,20 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     // Intro timeline
     const chars = L.map(l => l.i);
     const ui = ['.top', '.tag', '.info', '.stack', '.badge'];
-    const bootEl = host.querySelector<HTMLElement>('#boot')!;
-    const cntEl = host.querySelector<HTMLElement>('#cnt')!;
-    const btEl = host.querySelector<HTMLElement>('#bt')!;
+    const bootEl = host.querySelector<HTMLElement>('#boot');
+    const cntEl = host.querySelector<HTMLElement>('#cnt');
+    const btEl = host.querySelector<HTMLElement>('#bt');
 
     if (RM) {
-      role.textContent = roles[0];
+      if (role) role.textContent = roles[0];
       live = true;
       if (bootEl) bootEl.remove();
       this._initExitTrigger(host);
     } else {
-      // Lock scroll while boot loader is active so user cannot scroll prematurely
-      const unlockScroll = () => {
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-      };
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
+      // Lock scroll via smoothScroll service during boot
+      this.smoothScroll.stop();
       window.scrollTo(0, 0);
-      this.cleanups.push(unlockScroll);
+      this.cleanups.push(() => this.smoothScroll.start());
 
       if (bootEl) {
         const preventScroll = (e: Event) => e.preventDefault();
@@ -332,13 +332,13 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       gsap.set(chars, { yPercent: 125, rotation: 8, transformOrigin: '0% 100%' });
       gsap.set(ui, { autoAlpha: 0, y: 24 });
       gsap.set('.strip', { yPercent: 100 });
-      gsap.set(pw, { yPercent: 102 });
-      gsap.set(glow, { autoAlpha: 0, scale: 0.7 });
+      if (pw) gsap.set(pw, { yPercent: 102 });
+      if (glow) gsap.set(glow, { autoAlpha: 0, scale: 0.7 });
 
       const lines = ['$ git init cairo-portfolio', '$ git commit -m "hello, world"', '$ ng build && git push'];
       const rows = lines.map(() => {
         const d = document.createElement('div');
-        btEl.appendChild(d);
+        if (btEl) btEl.appendChild(d);
         return d;
       });
       const cn = { n: 0 };
@@ -368,14 +368,13 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
           measure();
           live = true;
           nextRoleCall = gsap.delayedCall(2.4, nextRole);
-          // Desktop only: JS glow breathing (mobile uses CSS animation)
-          if (!CO) {
-            const glowAnim = gsap.to(glow, { scale: 1.08, duration: 4.5, ease: 'sine.inOut', yoyo: true, repeat: -1 });
-            this.cleanups.push(() => glowAnim.kill());
+          if (!CO && glow) {
+            this.glowAnim = gsap.to(glow, { scale: 1.08, duration: 4.5, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+            this.cleanups.push(() => this.glowAnim?.kill());
           }
         }, '>-.4')
         .eventCallback('onComplete', () => {
-          unlockScroll();
+          this.smoothScroll.start();
           if (bootEl) bootEl.remove();
           this._initExitTrigger(host);
           ScrollTrigger.refresh();
@@ -386,41 +385,65 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   private _initExitTrigger(host: HTMLElement): void {
     const hero = host.querySelector<HTMLElement>('.hero')!;
     if (!hero) return;
-    const q = (x: string) => hero.querySelectorAll<HTMLElement>(x);
-    const isTouch = matchMedia('(pointer: coarse)').matches;
+    const heroDim = host.querySelector<HTMLElement>('.hero-dim');
+    const pwrap = host.querySelector<HTMLElement>('#pwrap');
+    const heroTrack = host.closest('.hero-track') || host.parentElement || host;
 
-    // Curtain Reveal: Section 2 slides up smoothly over the pinned Hero
-    // All hero elements are isolated within host (z-index: 1) so work (z-index: 5) cleanly covers them
+    const isCoarse = matchMedia('(pointer: coarse)').matches;
+    const isNarrow = matchMedia('(max-width: 768px)').matches;
+    const isMobile = isCoarse || isNarrow;
+
+    // Compositor-driven sticky curtain: Work slides over Hero.
+    // Exit trigger drives only cheap translateY on portrait and opacity on hero-dim.
     const exitTl = gsap.timeline({
       defaults: { ease: 'none' },
       scrollTrigger: {
-        trigger: host,
+        trigger: heroTrack,
         start: 'top top',
-        end: '+=100%',
-        pin: true,
-        pinSpacing: false,
-        scrub: isTouch ? 0.2 : 0.35,
-        refreshPriority: 1,
-        anticipatePin: 1,
-        fastScrollEnd: true,
+        end: 'bottom bottom',
+        scrub: true,
         invalidateOnRefresh: true,
+        onLeave: () => {
+          hero.style.visibility = 'hidden';
+          hero.classList.add('hero-paused');
+          this.mqAnim?.pause();
+          this.glowAnim?.pause();
+        },
+        onEnterBack: () => {
+          hero.style.visibility = '';
+          hero.classList.remove('hero-paused');
+          this.mqAnim?.resume();
+          this.glowAnim?.resume();
+        },
       },
-    })
-      .to(q('.ci'), { yPercent: -120, duration: 0.5, ease: 'power2.in', stagger: { each: 0.025 } }, 0)
-      .to(q('.info, .stack, .tag, .badge, .strip'), { y: -40, autoAlpha: 0, duration: 0.35 }, 0)
-      .to(q('.pwrap'), { yPercent: 22, duration: 1, ease: 'none' }, 0)
-      .to(hero, { scale: 0.94, autoAlpha: 0.35, duration: 1 }, 0);
+    });
+
+    if (heroDim) {
+      exitTl.to(heroDim, { opacity: 0.65, ease: 'none' }, 0);
+    }
+
+    if (pwrap) {
+      exitTl.to(pwrap, { y: '16svh', ease: 'none' }, 0);
+    }
+
+    if (!isMobile) {
+      const chars = hero.querySelectorAll<HTMLElement>('.name:not(.ol) .ci');
+      if (chars.length) {
+        exitTl.to(chars, { yPercent: -100, ease: 'power2.in', stagger: { each: 0.02 } }, 0);
+      }
+    }
 
     this.cleanups.push(() => {
       exitTl.scrollTrigger?.kill();
       exitTl.kill();
     });
-    ScrollTrigger.refresh();
   }
 
   ngOnDestroy(): void {
-    this.ctx?.revert();
+    this.mqAnim?.kill();
+    this.glowAnim?.kill();
     this.cleanups.forEach(fn => fn());
     this.cleanups = [];
+    this.ctx?.revert();
   }
 }
