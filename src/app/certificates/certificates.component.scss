@@ -526,7 +526,7 @@
     max-width: 100%;
     width: 100%;
     box-sizing: border-box;
-    overflow: clip;
+    overflow: visible;
   }
 
   .cert-stack-wrap {
@@ -535,8 +535,7 @@
     min-width: 0;
     box-sizing: border-box;
     perspective: none;
-    overflow: clip;
-    clip-path: inset(-40px 0 -60px 0);
+    overflow: visible;
   }
 
   .cert-stack {
@@ -546,7 +545,7 @@
     box-sizing: border-box;
     height: clamp(380px, 54vh, 450px);
     transform-style: flat;
-    overflow: clip;
+    overflow: visible;
   }
 
   .cert-sheet {

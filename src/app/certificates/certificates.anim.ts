@@ -135,14 +135,13 @@ export function initCertificates(host, gsap, ScrollTrigger, onIndexChange) {
       }
 
       // Sheet flight choreography:
-      // On mobile: cards fly up-and-out (slight X tilt, mostly Y) staying within the clipped stage
-      // On desktop: cards fly up and outward with more horizontal spread
-      // In both: the card remains 100% solid and opaque until 70% cleared
+      // On mobile: cards fly straight UP (no horizontal) so they exit cleanly via section overflow:clip
+      // On desktop: cards fly up and outward with slight horizontal spread
       for (let step = 0; step < n - 1; step++) {
         const exitingSheet = sheets[step];
-        const exitX = step % 2 === 0 ? 15 : -15;
+        const exitX = isMobile ? 0 : (step % 2 === 0 ? 20 : -20);
         const exitY = -130;
-        const exitRot = step % 2 === 0 ? 8 : -8;
+        const exitRot = step % 2 === 0 ? 6 : -6;
 
         // 1. Movement of the exiting sheet
         tl.to(
