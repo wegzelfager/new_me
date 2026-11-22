@@ -65,7 +65,9 @@
   }
 }
 
-.pA, .pB, .pM {
+.pA,
+.pB,
+.pM {
   filter: drop-shadow(0 0 7px rgba(255, 210, 63, 0.55));
   stroke: var(--acc);
   stroke-dasharray: 1;
@@ -73,9 +75,13 @@
 }
 
 @media (pointer: coarse) {
-  .pA, .pB, .pM {
+
+  .pA,
+  .pB,
+  .pM {
     filter: none; // drop-shadow on SVG paths is expensive on mobile GPU
   }
+
   .tr::before {
     display: none; // dot-grid background paint cost
   }
@@ -284,6 +290,7 @@
   .lt {
     clip-path: none !important;
   }
+
   .ring-svg {
     display: none;
   }
