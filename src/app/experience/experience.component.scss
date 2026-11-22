@@ -174,8 +174,13 @@
 }
 
 @keyframes xp-pulse {
-  0% { box-shadow: 0 0 0 0 var(--acc); }
-  100% { box-shadow: 0 0 0 14px transparent; }
+  0% {
+    box-shadow: 0 0 0 0 var(--acc);
+  }
+
+  100% {
+    box-shadow: 0 0 0 14px transparent;
+  }
 }
 
 /* Releases: stacked by default (mobile, reduced motion) */
@@ -442,7 +447,9 @@
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
 
-    &::-webkit-scrollbar { display: none; }
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   .xp-mob-tab {
@@ -475,12 +482,6 @@
     height: 6px;
     border-radius: 50%;
     background: currentColor;
-
-    .xp-mob-tab.live & {
-      background: #00e676;
-      box-shadow: 0 0 6px #00e676;
-      animation: xp-pulse 1.8s infinite;
-    }
   }
 
   /* Horizontal swipe track */
@@ -494,7 +495,9 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 
-    &::-webkit-scrollbar { display: none; }
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   /* Release card item */
