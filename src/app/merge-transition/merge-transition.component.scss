@@ -79,6 +79,22 @@
   .tr::before {
     display: none; // dot-grid background paint cost
   }
+  // No JS clip-path on mobile — lt fades in via opacity
+  .lt {
+    clip-path: none !important;
+    opacity: 0;
+  }
+  // Ring hidden on mobile (no clip-path expand)
+  .ring {
+    display: none !important;
+  }
+  // Remove heavy box-shadow / backdrop-filter on mobile
+  .term {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+    background: color-mix(in srgb, var(--dk) 95%, transparent);
+  }
 }
 
 .tk {
