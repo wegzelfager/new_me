@@ -70,6 +70,7 @@
   border-radius: 50%;
   background: radial-gradient(circle, var(--glow), transparent 66%);
   filter: blur(20px);
+  will-change: transform;
 }
 
 .grain {
@@ -80,6 +81,35 @@
   opacity: 0.1;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (pointer: coarse) {
+  // Disable expensive compositing effects on mobile
+  .grain {
+    display: none;
+  }
+
+  // Remove blur on glow — very costly on mobile GPUs
+  .glow {
+    filter: none;
+    // CSS breathing animation replaces JS gsap.to repeat:-1
+    animation: glowBreathe 4.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes glowBreathe {
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); }
+  }
+
+  // CSS marquee replaces GSAP on mobile
+  .track.css-marquee {
+    animation: cssMarquee 40s linear infinite;
+  }
+
+  @keyframes cssMarquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
 }
 
 .cur {
@@ -296,6 +326,7 @@
   width: var(--pw);
   pointer-events: none;
   transform-origin: 50% 100%;
+  will-change: transform;
 }
 
 .person {

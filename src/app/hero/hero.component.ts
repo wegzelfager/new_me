@@ -55,7 +55,6 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     let live = false;
     let seen = false;
     const m = { x: -999, y: -999 };
-    const sm = () => innerWidth < 768;
 
     // Duplicate name: solid copy behind portrait, outline copy in front
     const nm = host.querySelector<HTMLElement>('.name')!;
@@ -65,7 +64,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     ol.setAttribute('aria-hidden', 'true');
     hero.append(ol);
 
-    // Letter splitting
+    // Letter splitting — on mobile (CO) skip quickTo instances to save JS overhead
     type LetterEntry = {
       o: HTMLElement;
       i: HTMLElement;
@@ -87,12 +86,19 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
         i.textContent = c;
         o.append(i);
         ln.append(o);
-        const q = (p: string) => gsap.quickTo(i, p, { duration: 0.7, ease: 'power3' }) as (v: number) => void;
-        L.push({ o, i, qx: q('x'), qy: q('y'), qr: q('rotation'), cx: 0, cy: 0 });
+        if (!CO) {
+          const q = (p: string) => gsap.quickTo(i, p, { duration: 0.7, ease: 'power3' }) as (v: number) => void;
+          L.push({ o, i, qx: q('x'), qy: q('y'), qr: q('rotation'), cx: 0, cy: 0 });
+        } else {
+          // Mobile: push span refs but no quickTo — only needed for intro animation (chars array)
+          const noop = (_v: number) => {};
+          L.push({ o, i, qx: noop, qy: noop, qr: noop, cx: 0, cy: 0 });
+        }
       });
     });
 
-    const measure = () => {
+    // measure only needed on desktop (for push repulsion)
+    const measure = CO ? () => {} : () => {
       L.forEach(l => {
         const r = l.o.getBoundingClientRect();
         l.cx = r.left + r.width / 2;
@@ -100,9 +106,11 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       });
     };
 
+    // push only runs on desktop
     function push() {
-      const Rr = sm() ? 150 : 300;
-      const A = sm() ? 26 : 64;
+      if (CO) return;
+      const Rr = 300;
+      const A = 64;
       L.forEach(l => {
         const dx = l.cx - m.x;
         const dy = l.cy - m.y;
@@ -114,28 +122,27 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       });
     }
 
-    // Cursor + parallax
+    // Cursor + parallax — only set up quickTo instances on desktop
     gsap.set([dot, ring], { xPercent: -50, yPercent: -50 });
     const qk = (elTarget: HTMLElement, p: string, d: number) =>
       gsap.quickTo(elTarget, p, { duration: d, ease: 'power3' }) as (v: number) => void;
-    const qd = [qk(dot, 'x', 0.1), qk(dot, 'y', 0.1)];
-    const qr = [qk(ring, 'x', 0.5), qk(ring, 'y', 0.5)];
-    const qp = [qk(pw, 'x', 1.2), qk(pw, 'y', 1.2)];
-    const qg = [qk(glow, 'x', 1.8), qk(glow, 'y', 1.8)];
-    const qn = Array.from(host.querySelectorAll<HTMLElement>('.name')).map(n => qk(n, 'x', 1.4));
+    const qd = !CO ? [qk(dot, 'x', 0.1), qk(dot, 'y', 0.1)] : [(_v: number) => {}, (_v: number) => {}];
+    const qr = !CO ? [qk(ring, 'x', 0.5), qk(ring, 'y', 0.5)] : [(_v: number) => {}, (_v: number) => {}];
+    const qp = !CO ? [qk(pw, 'x', 1.2), qk(pw, 'y', 1.2)] : [(_v: number) => {}, (_v: number) => {}];
+    const qg = !CO ? [qk(glow, 'x', 1.8), qk(glow, 'y', 1.8)] : [(_v: number) => {}, (_v: number) => {}];
+    const qn = !CO ? Array.from(host.querySelectorAll<HTMLElement>('.name')).map(n => qk(n, 'x', 1.4)) : [];
 
     const onPointermove = (e: PointerEvent) => {
+      if (CO) return; // skip all pointer tracking on touch devices
       m.x = e.clientX;
       m.y = e.clientY;
-      if (!CO) {
-        qd[0](m.x);
-        qd[1](m.y);
-        qr[0](m.x);
-        qr[1](m.y);
-        if (!seen) {
-          seen = true;
-          gsap.to([dot, ring], { opacity: 1, duration: 0.3 });
-        }
+      qd[0](m.x);
+      qd[1](m.y);
+      qr[0](m.x);
+      qr[1](m.y);
+      if (!seen) {
+        seen = true;
+        gsap.to([dot, ring], { opacity: 1, duration: 0.3 });
       }
       if (live) {
         push();
@@ -154,6 +161,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     this.cleanups.push(() => window.removeEventListener('pointermove', onPointermove));
 
     const onPointerleave = () => {
+      if (CO) return;
       m.x = m.y = -999;
       if (live) push();
     };
@@ -237,15 +245,20 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
 
     document.fonts.ready.then(measure);
 
-    // Marquee
+    // Marquee — CSS animation on mobile, GSAP on desktop
     const items = ['Angular', 'Node.js', 'Express', 'MongoDB', 'MySQL', 'Stripe', 'Paymob', 'GSAP', 'Git automation', 'NASA Space Apps'];
     const set = items.map(t => '<span class="it">' + t + '</span>').join('');
     const track = host.querySelector<HTMLElement>('#track')!;
     if (track) {
       track.innerHTML = set + set + set + set;
       if (!RM) {
-        const mqAnim = gsap.to(track, { xPercent: -50, duration: 45, ease: 'none', repeat: -1 });
-        this.cleanups.push(() => mqAnim.kill());
+        if (CO) {
+          // Mobile: pure CSS marquee — no JS RAF needed
+          track.classList.add('css-marquee');
+        } else {
+          const mqAnim = gsap.to(track, { xPercent: -50, duration: 45, ease: 'none', repeat: -1 });
+          this.cleanups.push(() => mqAnim.kill());
+        }
       }
     }
 
@@ -281,7 +294,12 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     let nextRoleCall: ReturnType<typeof gsap.delayedCall> | null = null;
     const nextRole = () => {
       ri = (ri + 1) % roles.length;
-      scr(role, roles[ri], 0.9);
+      // Mobile: use simple typeTo (no per-frame scramble RAF), desktop: scramble effect
+      if (CO) {
+        typeTo(role, roles[ri], 0.7);
+      } else {
+        scr(role, roles[ri], 0.9);
+      }
       nextRoleCall = gsap.delayedCall(3.2, nextRole);
     };
     this.cleanups.push(() => {
@@ -333,15 +351,18 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
         .to(glow, { autoAlpha: 1, scale: 1, duration: 2.4, ease: 'power2.out' }, '<.6')
         .to(pw, { yPercent: 0, duration: 2.2, ease: 'expo.out' }, '<.3')
         .to(ui, { autoAlpha: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.1 }, '<.9')
-        .add(scr(role, roles[0], 1.2), '<.2')
+        .add(CO ? typeTo(role, roles[0], 0.8) : scr(role, roles[0], 1.2), '<.2')
         .add(() => {
           gsap.set(host.querySelectorAll<HTMLElement>('.ln'), { overflow: 'visible' });
           gsap.set(chars, { transformOrigin: '50% 50%' });
           measure();
           live = true;
           nextRoleCall = gsap.delayedCall(2.4, nextRole);
-          const glowAnim = gsap.to(glow, { scale: 1.08, duration: 4.5, ease: 'sine.inOut', yoyo: true, repeat: -1 });
-          this.cleanups.push(() => glowAnim.kill());
+          // Desktop only: JS glow breathing (mobile uses CSS animation)
+          if (!CO) {
+            const glowAnim = gsap.to(glow, { scale: 1.08, duration: 4.5, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+            this.cleanups.push(() => glowAnim.kill());
+          }
         }, '>-.4')
         .eventCallback('onComplete', () => {
           this._initExitTrigger(host);
