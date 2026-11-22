@@ -1,6 +1,8 @@
 :host {
   display: block;
   position: relative;
+  z-index: 1;
+  isolation: isolate;
   height: 100vh;
   height: 100svh;
   font-family: 'Inter Tight', system-ui, sans-serif;

@@ -369,6 +369,31 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     if (!hero) return;
     const q = (x: string) => hero.querySelectorAll<HTMLElement>(x);
     const isTouch = matchMedia('(pointer: coarse)').matches;
+    const isMobile = window.innerWidth <= 800 || isTouch;
+
+    if (isMobile) {
+      // Mobile: Natural scroll with buttery hardware-accelerated photo parallax (no pin-jacking)
+      const mobParallax = gsap.to(q('.pwrap'), {
+        yPercent: -14,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: host,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.2,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      this.cleanups.push(() => {
+        mobParallax.scrollTrigger?.kill();
+        mobParallax.kill();
+      });
+      ScrollTrigger.refresh();
+      return;
+    }
+
+    // Desktop: Pin exit transition with unified stacking
     const exitTl = gsap.timeline({
       defaults: { ease: 'none' },
       scrollTrigger: {
@@ -377,7 +402,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
         end: '+=100%',
         pin: true,
         pinSpacing: false,
-        scrub: isTouch ? 0.2 : 0.35,
+        scrub: 0.35,
         refreshPriority: 1,
         anticipatePin: 1,
         fastScrollEnd: true,
@@ -385,8 +410,8 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       },
     })
       .to(q('.ci'), { yPercent: -120, duration: 0.5, ease: 'power2.in', stagger: { each: 0.025 } }, 0)
-      .to(q('.info, .stack, .tag, .badge'), { y: -40, autoAlpha: 0, duration: 0.35 }, 0)
-      .to(q('.pwrap'), { yPercent: 25, duration: 1, ease: 'none' }, 0)
+      .to(q('.info, .stack, .tag, .badge, .strip'), { y: -40, autoAlpha: 0, duration: 0.35 }, 0)
+      .to(q('.pwrap'), { yPercent: 20, duration: 1, ease: 'none' }, 0)
       .to(hero, { scale: 0.9, autoAlpha: 0.3, duration: 1 }, 0);
 
     this.cleanups.push(() => {
