@@ -39,7 +39,6 @@ export class MergeTransitionComponent implements AfterViewInit, OnDestroy {
     const $$ = <T extends HTMLElement>(s: string) => Array.from(host.querySelectorAll<T>(s));
 
     const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const CO = matchMedia('(pointer: coarse)').matches;
     const Rmax = () => Math.hypot(window.innerWidth, window.innerHeight) / 2 + 40;
 
     // Split headline #mt into masked words
@@ -67,19 +66,17 @@ export class MergeTransitionComponent implements AfterViewInit, OnDestroy {
     const words = $$('#mt .mi');
 
     const lt = $('#lt');
-    const ring = $('#ring');
+    const ringCircle = host.querySelector<SVGCircleElement>('#ringCircle');
     const o = { r: 0 };
     let mx = 0;
     let my = 0;
 
     const paint = () => {
-      if (!lt || !ring) return;
-      lt.style.clipPath = 'circle(' + o.r + 'px at ' + mx.toFixed(1) + 'px ' + my.toFixed(1) + 'px)';
-      const d = o.r * 2;
-      ring.style.width = ring.style.height = d + 'px';
-      ring.style.left = mx.toFixed(1) + 'px';
-      ring.style.top = my.toFixed(1) + 'px';
-      ring.style.opacity = o.r < 6 || o.r > Rmax() - 30 ? '0' : '1';
+      if (!lt || !ringCircle) return;
+      const radius = o.r;
+      lt.style.clipPath = 'circle(' + radius.toFixed(1) + 'px at ' + mx.toFixed(1) + 'px ' + my.toFixed(1) + 'px)';
+      ringCircle.setAttribute('r', radius.toFixed(1));
+      ringCircle.style.opacity = radius < 6 || radius > Rmax() - 25 ? '0' : '1';
     };
 
     const type = (tl: gsap.core.Timeline, el: HTMLElement | null, s: string, at: number, d: number) => {
@@ -164,6 +161,10 @@ export class MergeTransitionComponent implements AfterViewInit, OnDestroy {
           my = cyPos;
           mg.setAttribute('cx', mx.toString());
           mg.setAttribute('cy', my.toString());
+          if (ringCircle) {
+            ringCircle.setAttribute('cx', mx.toString());
+            ringCircle.setAttribute('cy', my.toString());
+          }
 
           LA = PA.getTotalLength();
           LB = PB.getTotalLength();
@@ -214,9 +215,9 @@ export class MergeTransitionComponent implements AfterViewInit, OnDestroy {
           scrollTrigger: {
             trigger: '#tr',
             start: 'top top',
-            end: CO ? '+=180%' : '+=280%',   // shorter scroll on mobile = less jank
+            end: '+=240%',
             pin: true,
-            scrub: CO ? 1 : 0.6,
+            scrub: 0.5,
             anticipatePin: 1,
             invalidateOnRefresh: true,
             refreshPriority: 3,
@@ -235,29 +236,16 @@ export class MergeTransitionComponent implements AfterViewInit, OnDestroy {
         type(tl, $('#t2'), 'Merge made by the ‘ort’ strategy.', 3.6, 1.1);
         type(tl, $('#t3'), '6 skills · 5 projects · 0 conflicts', 4.8, 1.1);
 
-        tl.to('.gr, .term', { scale: 0.9, autoAlpha: 0, duration: 1.6, ease: 'power2.in' }, 6.4)
-          .to('.tk.m', { autoAlpha: 0, duration: 1.2 }, 6.4)
-          .to('.mg', { scale: 1.6, duration: 0.6, ease: 'power2.in' }, 6);
-
-        if (CO) {
-          // Mobile: skip JS clip-path (expensive) — fade lt in with CSS opacity instead
-          tl.to('#lt', { autoAlpha: 1, duration: 2, ease: 'power2.inOut' }, 6.2)
-            .fromTo('#big', { xPercent: 6 }, { xPercent: -14, duration: 4 }, 6.2)
-            .fromTo('.chip', { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(3)' }, 7.4)
-            .to(words, { yPercent: 0, rotation: 0, duration: 0.9, ease: 'expo.out', stagger: 0.12 }, 7.6)
-            .fromTo('.msg p', { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 8.4)
-            .to({}, { duration: 1 }, 9.2);
-          // hide ring on mobile — no clip-path expansion
-          const ringEl = $('#ring');
-          if (ringEl) ringEl.style.display = 'none';
-        } else {
-          tl.to(o, { r: () => Rmax(), duration: 3, ease: 'power2.in', onUpdate: paint }, 6.2)
-            .fromTo('#big', { xPercent: 6 }, { xPercent: -14, duration: 4 }, 6.2)
-            .fromTo('.chip', { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(3)' }, 8.4)
-            .to(words, { yPercent: 0, rotation: 0, duration: 0.9, ease: 'expo.out', stagger: 0.12 }, 8.6)
-            .fromTo('.msg p', { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 9.4)
-            .to({}, { duration: 1 }, 10.2);
-        }
+        tl.to('.gr, .term', { scale: 0.95, autoAlpha: 0, duration: 1.4, ease: 'power2.in' }, 6.3)
+          .to('.tk.m', { autoAlpha: 0, duration: 1 }, 6.1)
+          .to('.mg', { scale: 1.35, duration: 0.5, ease: 'power1.out' }, 5.8)
+          .to(o, { r: () => Rmax(), duration: 3.2, ease: 'power1.inOut', onUpdate: paint }, 6.1)
+          .to('.mg', { autoAlpha: 0, duration: 0.3 }, 6.2)
+          .fromTo('#big', { xPercent: 6 }, { xPercent: -14, duration: 4.2 }, 6.1)
+          .fromTo('.chip', { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(2.5)' }, 8.3)
+          .to(words, { yPercent: 0, rotation: 0, duration: 0.9, ease: 'power2.out', stagger: 0.1 }, 8.5)
+          .fromTo('.msg p', { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 9.2)
+          .to({}, { duration: 0.8 }, 10.0);
       } else {
         o.r = 9999;
         paint();

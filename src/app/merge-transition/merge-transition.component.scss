@@ -79,16 +79,12 @@
   .tr::before {
     display: none; // dot-grid background paint cost
   }
-  // No JS clip-path on mobile — lt fades in via opacity
-  .lt {
-    clip-path: none !important;
-    opacity: 0;
+  // Mobile performance: subtle glow on ring instead of heavy blur
+  .ring-svg #ringCircle {
+    filter: drop-shadow(0 0 5px rgba(255, 210, 63, 0.6));
+    stroke-width: 3;
   }
-  // Ring hidden on mobile (no clip-path expand)
-  .ring {
-    display: none !important;
-  }
-  // Remove heavy box-shadow / backdrop-filter on mobile
+  // Remove heavy backdrop-filter on mobile terminal
   .term {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -184,19 +180,22 @@
   }
 }
 
-.ring {
+.ring-svg {
   position: absolute;
-  left: 50%;
-  top: 46%;
-  width: 0;
-  height: 0;
-  border: 3px solid var(--acc);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  box-shadow: 0 0 50px rgba(255, 210, 63, 0.45), inset 0 0 50px rgba(255, 210, 63, 0.25);
-  opacity: 0;
   z-index: 3;
+  overflow: visible;
+
+  #ringCircle {
+    fill: none;
+    stroke: var(--acc);
+    stroke-width: 3.5;
+    filter: drop-shadow(0 0 10px rgba(255, 210, 63, 0.7));
+    opacity: 0;
+  }
 }
 
 .lt {
@@ -209,6 +208,8 @@
   display: grid;
   place-items: center;
   overflow: hidden;
+  will-change: clip-path;
+  contain: paint;
 }
 
 .big {
@@ -226,6 +227,7 @@
   -webkit-text-stroke: 2px var(--lti);
   opacity: 0.14;
   user-select: none;
+  will-change: transform;
 }
 
 .msg {
@@ -282,7 +284,7 @@
   .lt {
     clip-path: none !important;
   }
-  .ring {
+  .ring-svg {
     display: none;
   }
 }
